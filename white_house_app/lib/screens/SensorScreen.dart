@@ -5,6 +5,7 @@ import 'package:white_house_app/models/Device.dart';
 import 'package:white_house_app/models/SensorData.dart';
 import 'package:white_house_app/providers/DeviceProvider.dart';
 import 'package:white_house_app/providers/SensorSummaryProvider.dart';
+import 'package:white_house_app/widgets/ChartItem.dart';
 import 'package:white_house_app/widgets/DeviceList.dart';
 import 'package:white_house_app/widgets/SensorSummaryList.dart';
 
@@ -38,6 +39,23 @@ class _SensorScreen extends State {
 
   @override
   Widget build(BuildContext context) {
+    List<SensorData> data = <SensorData>[
+      SensorData(createdDate: '08.00', value: '12'),
+      SensorData(createdDate: '08.15', value: '32'),
+      SensorData(createdDate: '08.30', value: '14'),
+      SensorData(createdDate: '08.45', value: '41'),
+      SensorData(createdDate: '09.00', value: '34'),
+      SensorData(createdDate: '09.15', value: '46'),
+      SensorData(createdDate: '09.30', value: '45'),
+      SensorData(createdDate: '09.45', value: '46'),
+      SensorData(createdDate: '10.00', value: '67'),
+      SensorData(createdDate: '10.15', value: '65'),
+      SensorData(createdDate: '10.30', value: '34'),
+      SensorData(createdDate: '10.45', value: '46'),
+      SensorData(createdDate: '11.00', value: '12'),
+      SensorData(createdDate: '11.30', value: '76'),
+    ];
+
     return Scaffold(
       backgroundColor: Colors.grey[350],
       appBar: AppBar(
@@ -48,84 +66,63 @@ class _SensorScreen extends State {
         child: Consumer<SensorSummaryProvider>(
           builder: (ctx, sensorSummaryProvider, _) => Column(
             children: <Widget>[
-              ChartItem(),
-              // SensorSummaryList(
-              //   sensorSummaryList: sensorSummaryProvider.sensorData,
-              // ),
+              ChartItem(
+                  name: 'Temperature',
+                  lastValue: '25.7',
+                  unitSymbol: '*C',
+                  data: data),
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: DataTable(
+                    headingRowHeight: 45,
+                    horizontalMargin: 10,
+                    rows: _convertDataToDataRow(data),
+                    columns: [
+                      DataColumn(
+                        label: Text(
+                          'Created Date',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Value',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
   }
-}
 
-class ChartItem extends StatelessWidget {
-  final String metricName;
-  final num value;
-  final String metric;
-  final List<double> dataList;
-
-  ChartItem(
-      {Key key,
-      @required this.metricName,
-      @required this.value,
-      @required this.metric,
-      @required this.dataList})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(2.0),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Material(
-          elevation: 4.0,
-          borderRadius: BorderRadius.circular(12.0),
-          child: InkWell(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            metricName,
-                            style: TextStyle(
-                                color: MyColors.headerTextColor, fontSize: 15),
-                          ),
-                          Text("$value $metric",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 24.0)),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Padding(padding: EdgeInsets.only(bottom: 4.0)),
-                  Sparkline(
-                    data: dataList,
-                    lineWidth: 3.0,
-                    pointColor: Colors.black,
-                    pointSize: 8.0,
-                    pointsMode: PointsMode.last,
-                    lineColor: MyColors.headerTextColor,
-                  )
-                ],
-              ),
+  List<DataRow> _convertDataToDataRow(List<SensorData> list) {
+    return list
+        .asMap()
+        .map(
+          (index, data) => MapEntry(
+            index,
+            DataRow(
+              cells: [
+                DataCell(
+                  Text(data.createdDate),
+                ),
+                DataCell(
+                  Text(data.value),
+                ),
+              ],
             ),
           ),
-        ),
-      ),
-    );
+        )
+        .values
+        .toList();
   }
+}
