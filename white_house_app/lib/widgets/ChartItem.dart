@@ -54,31 +54,33 @@ class ChartItem extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Row(
-                        children: <Widget>[
-                          Container(
-                            child: Wrap(
-                              children: <Widget>[
-                                FlatButton(
-                                  onPressed: () {},
-                                  child: Text("Day"),
-                                ),
-                              ],
+                      Expanded(
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              child: Wrap(
+                                children: <Widget>[
+                                  FlatButton(
+                                    onPressed: () {},
+                                    child: Text("Day"),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Container(
-                            child: FlatButton(
-                              onPressed: () {},
-                              child: Text("Week"),
+                            Container(
+                              child: FlatButton(
+                                onPressed: () {},
+                                child: Text("Week"),
+                              ),
                             ),
-                          ),
-                          Container(
-                            child: FlatButton(
-                              onPressed: () {},
-                              child: Text("Month"),
+                            Container(
+                              child: FlatButton(
+                                onPressed: () {},
+                                child: Text("Month"),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
