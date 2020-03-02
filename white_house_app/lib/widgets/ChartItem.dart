@@ -1,4 +1,3 @@
-import 'package:charts_flutter/flutter.dart' as chart;
 import 'package:flutter/material.dart';
 import 'package:white_house_app/models/SensorData.dart';
 import 'package:white_house_app/widgets/Chart.dart';
@@ -54,33 +53,17 @@ class ChartItem extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Expanded(
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              child: Wrap(
-                                children: <Widget>[
-                                  FlatButton(
-                                    onPressed: () {},
-                                    child: Text("Day"),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              child: FlatButton(
-                                onPressed: () {},
-                                child: Text("Week"),
-                              ),
-                            ),
-                            Container(
-                              child: FlatButton(
-                                onPressed: () {},
-                                child: Text("Month"),
-                              ),
-                            ),
-                          ],
-                        ),
+                      FlatButton(
+                        onPressed: () {},
+                        child: Text("Day"),
+                      ),
+                      FlatButton(
+                        onPressed: () {},
+                        child: Text("Week"),
+                      ),
+                      FlatButton(
+                        onPressed: () {},
+                        child: Text("Month"),
                       ),
                     ],
                   ),

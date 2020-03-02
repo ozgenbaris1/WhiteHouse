@@ -1,13 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:white_house_app/models/Device.dart';
 import 'package:white_house_app/models/SensorData.dart';
-import 'package:white_house_app/providers/DeviceProvider.dart';
 import 'package:white_house_app/providers/SensorSummaryProvider.dart';
 import 'package:white_house_app/widgets/ChartItem.dart';
-import 'package:white_house_app/widgets/DeviceList.dart';
-import 'package:white_house_app/widgets/SensorSummaryList.dart';
 
 class SensorScreen extends StatefulWidget {
   int deviceID;

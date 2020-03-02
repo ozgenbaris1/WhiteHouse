@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:white_house_app/models/Sensor.dart';
 import 'package:white_house_app/models/SensorData.dart';
-import 'package:white_house_app/models/SensorSummary.dart';
-import 'package:white_house_app/widgets/SensorItem.dart';
 
 class SensorSummaryItem extends StatelessWidget {
   SensorData sensorSummary;

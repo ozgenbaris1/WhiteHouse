@@ -1,11 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:white_house_app/models/Device.dart';
 import 'package:white_house_app/models/DeviceSummary.dart';
-import 'package:white_house_app/models/SensorData.dart';
-import 'package:white_house_app/screens/SensorScreen.dart';
-import 'package:white_house_app/widgets/SensorItem.dart';
 import 'package:white_house_app/widgets/SensorList.dart';
 
 class DeviceItem extends StatelessWidget {
@@ -71,7 +67,7 @@ class DeviceItem extends StatelessWidget {
                     height: 20,
                   ),
                   SensorList(
-                    deviceID : deviceSummary.device.deviceID,
+                    deviceID: deviceSummary.device.deviceID,
                     sensorList: deviceSummary.sensorDataList,
                   ),
                 ],
