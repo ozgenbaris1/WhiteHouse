@@ -5,16 +5,16 @@ import 'package:white_house_app/models/DeviceSummary.dart';
 import 'package:white_house_app/models/SensorData.dart';
 
 class DeviceSummaryProvider extends ChangeNotifier {
-  List<DeviceSummary> device;
+  List<DeviceSummary> deviceList;
 
   getDevices() async {
     var response = await API.getDevices();
 
-    if (response['type'] == 'S') {
-      Iterable list = response['data'];
+    if (response.type == 'S') {
+      Iterable list = response.data;
 
-      device = list.map((item) {
-        var list = item['SensorDataList'];
+      deviceList = list.map((item) {
+        var sensorDataList = item['SensorDataList'];
 
         Device device = new Device(
           deviceID: item['Device']['DeviceID'],
@@ -23,7 +23,7 @@ class DeviceSummaryProvider extends ChangeNotifier {
           isOnline: item['Device']['IsOnline'],
         );
 
-        List<SensorData> data = list
+        List<SensorData> data = sensorDataList
             .map<SensorData>(
               (element) => SensorData(
                 sensorID: element['SensorID'],

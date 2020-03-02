@@ -27,19 +27,95 @@ app.get("/getDevices", (req, res) => {
         sensors = getDataFromDatabase(`SELECT * FROM SensorSummary WHERE DeviceID = ${item.DeviceID};`);
 
         sensors.forEach(element => {
-            element.Value.toFixed(1)
+            element.Value = element.Value.toFixed(1)
         });
 
         data.push({ Device: item, SensorDataList: sensors });
     });
 
-    var response = {
+    res.send({
         type: 'S',
+        message: null,
         data: data
+    });
+});
+
+app.get("/getSensorDataSummary", (req, res) => {
+
+    if (req.query['DeviceID'] == null || req.query['SensorID'] == null) {
+        res.send({
+            type: 'E',
+            message: 'Wrong Query Parameters',
+            data: []
+        });
     }
 
-    res.send(response);
+    var sensorData = getDataFromDatabase(`SELECT CreatedDate, Value FROM SensorDatas WHERE SensorDatas.DeviceID = ${req.query.DeviceID} AND SensorDatas.SensorID = ${req.query.SensorID} ORDER BY CreatedDate DESC LIMIT 50;`);
+
+    sensorData.forEach((sensorItem) => {
+        sensorItem.Value = sensorItem.Value.toFixed(1) //(Math.round(sensorItem.Value * 100) / 100).toFixed(1); // parseFloat(sensorItem.Value.toFixed(1)); 
+    });
+
+    sensorData.sort(function(a, b) {
+        if (a.CreatedDate < b.CreatedDate) {
+            return -1;
+        }
+        if (a.CreatedDate > b.CreatedDate) {
+            return 1;
+        }
+        return 0;
+    });
+
+    res.send({
+        type: 'S',
+        message: null,
+        data: sensorData
+    });
 });
+
+// app.get("/getSensorDataSummary", (req, res) => {
+
+//     if (req.query['DeviceID'] == null || req.query['SensorID'] == null) {
+//         res.send({
+//             type: 'E',
+//             message: 'Wrong Query Parameters',
+//             data: []
+//         });
+//     }
+
+//     var data = [];
+
+//     var sensors = getDataFromDatabase(`SELECT * FROM Device_Sensor LEFT JOIN Sensors ON Device_Sensor.SensorID = Sensors.SensorID WHERE DeviceID = ${req.query.DeviceID};`);
+
+//     sensors.forEach((item) => {
+//         var sensorData = getDataFromDatabase(`SELECT * FROM SensorDatas WHERE DeviceID = ${req.query.DeviceID} AND SensorID = ${item.SensorID} ORDER BY CreatedDate DESC LIMIT 50;`);
+
+//         sensorData.forEach((sensorItem) => {
+//             sensorItem.Value = sensorItem.Value.toFixed(1) //(Math.round(sensorItem.Value * 100) / 100).toFixed(1); // parseFloat(sensorItem.Value.toFixed(1)); 
+//         });
+
+//         sensorData.sort(function(a, b) {
+//             if (a.CreatedDate < b.CreatedDate) {
+//                 return -1;
+//             }
+//             if (a.CreatedDate > b.CreatedDate) {
+//                 return 1;
+//             }
+//             return 0;
+//         });
+
+//         data.push({
+//             sensor: item,
+//             sensorData: sensorData
+//         })
+//     });
+
+//     res.send({
+//         type: 'S',
+//         message: null,
+//         data: data
+//     });
+// });
 
 app.post("/insertSensorData", (req, res) => {
 
@@ -68,13 +144,7 @@ app.post("/insertSensorData", (req, res) => {
 
 function insertSensorDataToDatabase(query, data) {
     var database = new sqlite3(DATABASE_PATH);
-    var response = database.prepare(`
-    INSERT INTO SensorDatas (
-         DeviceID, 
-         SensorID, 
-         Value)
-    VALUES ( ?,?,? )`).run(data);
-
+    var response = database.prepare(query).run(data);
     database.close();
     return response;
 }

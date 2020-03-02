@@ -3,9 +3,10 @@ import 'package:white_house_app/models/SensorData.dart';
 import 'package:white_house_app/widgets/SensorItem.dart';
 
 class SensorList extends StatelessWidget {
+  int deviceID;
   List<SensorData> sensorList;
 
-  SensorList({this.sensorList});
+  SensorList({this.deviceID, this.sensorList});
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +56,7 @@ class SensorList extends StatelessWidget {
       data = sensorList.map<Widget>(
         (item) {
           return SensorItem(
+            deviceID : this.deviceID,
             sensorData: item,
           );
         },

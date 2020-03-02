@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:white_house_app/models/Device.dart';
-import 'package:white_house_app/models/SensorData.dart';
 import 'package:white_house_app/providers/DeviceProvider.dart';
 import 'package:white_house_app/widgets/DeviceList.dart';
 
@@ -25,19 +23,31 @@ class _DeviceScreen extends State {
 
   @override
   Widget build(BuildContext context) {
-    Device device;
-    List<SensorData> sensorList = List<SensorData>();
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.grey[350],
       appBar: AppBar(
         centerTitle: true,
         title: Text('White House'),
       ),
       body: Container(
         child: Consumer<DeviceSummaryProvider>(
-          builder: (ctx, deviceSummaryProvider, _) => DeviceList(
-            deviceList: deviceSummaryProvider.device,
-          ),
+          builder: (ctx, deviceSummaryProvider, _) {
+            if (deviceSummaryProvider.deviceList != null) {
+              if (deviceSummaryProvider.deviceList.length > 0) {
+                return DeviceList(
+                  deviceList: deviceSummaryProvider.deviceList,
+                );
+              } else {
+                return Container(
+                  child: Text("No Data"),
+                );
+              }
+            } else {
+              return Container(
+                child: Text("No Data"),
+              );
+            }
+          },
         ),
       ),
     );

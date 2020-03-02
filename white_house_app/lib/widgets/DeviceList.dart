@@ -13,11 +13,14 @@ class DeviceList extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Column(
-          children: deviceList.map<Widget>(
-        (item) => DeviceItem(
-          deviceSummaryList: item,
-        ),
-      )),
+        children: deviceList
+            .map<Widget>(
+              (item) => DeviceItem(
+                deviceSummary: item,
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 }

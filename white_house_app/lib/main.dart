@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:white_house_app/providers/DeviceProvider.dart';
+import 'package:white_house_app/providers/SensorSummaryProvider.dart';
 import 'package:white_house_app/screens/DeviceScreen.dart';
 
 void main() => runApp(MyApp());
@@ -12,6 +13,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => DeviceSummaryProvider()),
+        ChangeNotifierProvider(create: (context) => SensorSummaryProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

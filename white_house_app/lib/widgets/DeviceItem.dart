@@ -4,13 +4,14 @@ import 'package:flutter/rendering.dart';
 import 'package:white_house_app/models/Device.dart';
 import 'package:white_house_app/models/DeviceSummary.dart';
 import 'package:white_house_app/models/SensorData.dart';
+import 'package:white_house_app/screens/SensorScreen.dart';
 import 'package:white_house_app/widgets/SensorItem.dart';
 import 'package:white_house_app/widgets/SensorList.dart';
 
 class DeviceItem extends StatelessWidget {
-  DeviceSummary deviceSummaryList;
+  DeviceSummary deviceSummary;
 
-  DeviceItem({this.deviceSummaryList});
+  DeviceItem({this.deviceSummary});
 
   @override
   Widget build(BuildContext context) {
@@ -27,52 +28,51 @@ class DeviceItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  FlatButton(
-                    onPressed: () {},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            deviceSummary.device.name,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 24.0),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            deviceSummary.device.description,
+                            style: TextStyle(color: Colors.grey, fontSize: 15),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        child: Row(
                           children: <Widget>[
-                            Text(
-                              deviceSummaryList.device.name,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 24.0),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              deviceSummaryList.device.description,
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 15),
+                            Icon(
+                              Icons.ac_unit,
+                              color: deviceSummary.device.isOnline
+                                  ? Colors.green
+                                  : Colors.red,
                             ),
                           ],
                         ),
-                        Container(
-                          alignment: Alignment.center,
-                          child: Row(
-                            children: <Widget>[
-                              Icon(
-                                Icons.ac_unit,
-                                color: Colors.red,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   SensorList(
-                    sensorList: deviceSummaryList.sensorDataList,
+                    deviceID : deviceSummary.device.deviceID,
+                    sensorList: deviceSummary.sensorDataList,
                   ),
                 ],
               ),
