@@ -56,7 +56,7 @@ class SensorList extends StatelessWidget {
       data = sensorList.map<Widget>(
         (item) {
           return SensorItem(
-            deviceID : this.deviceID,
+            deviceID: this.deviceID,
             sensorData: item,
           );
         },

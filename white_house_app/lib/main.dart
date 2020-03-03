@@ -3,8 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:white_house_app/providers/DeviceProvider.dart';
 import 'package:white_house_app/providers/SensorSummaryProvider.dart';
 import 'package:white_house_app/screens/DeviceScreen.dart';
+import 'package:syncfusion_flutter_core/core.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  SyncfusionLicense.registerLicense(
+      "NT8mJyc2IWhiZH1nfWN9YGpoYmF8YGJ8ampqanNiYmlmamlmanMDHmgxMiE6IDwpNDY9amUTND4yOj99MDw+");
+
+  return runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

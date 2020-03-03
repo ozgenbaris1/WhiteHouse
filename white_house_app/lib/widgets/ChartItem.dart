@@ -53,17 +53,48 @@ class ChartItem extends StatelessWidget {
                           ),
                         ],
                       ),
-                      FlatButton(
-                        onPressed: () {},
-                        child: Text("Day"),
+                      Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                        child: RawMaterialButton(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            side: BorderSide(color: Colors.red),
+                          ),
+                          constraints: BoxConstraints(),
+                          onPressed: () {},
+                          child: Text("Day"),
+                        ),
                       ),
-                      FlatButton(
-                        onPressed: () {},
-                        child: Text("Week"),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                        child: RawMaterialButton(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            side: BorderSide(color: Colors.red),
+                          ),
+                          constraints: BoxConstraints(),
+                          onPressed: () {},
+                          child: Text("Week"),
+                        ),
                       ),
-                      FlatButton(
-                        onPressed: () {},
-                        child: Text("Month"),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                        child: RawMaterialButton(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            side: BorderSide(color: Colors.red),
+                          ),
+                          constraints: BoxConstraints(),
+                          onPressed: () {},
+                          child: Text("Month"),
+                        ),
                       ),
                     ],
                   ),
