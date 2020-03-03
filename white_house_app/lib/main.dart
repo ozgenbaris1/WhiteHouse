@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:white_house_app/providers/DeviceProvider.dart';
 import 'package:white_house_app/providers/SensorSummaryProvider.dart';
+import 'package:white_house_app/screens/CommandScreen.dart';
 import 'package:white_house_app/screens/DeviceScreen.dart';
 import 'package:syncfusion_flutter_core/core.dart';
 
