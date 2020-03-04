@@ -30,31 +30,21 @@ class _SensorScreen extends State {
 
   initDataProviders() async {
     await Provider.of<SensorSummaryProvider>(context, listen: false)
-        .getSensorDataList(deviceID: this.deviceID, sensorID: this.sensorID);
+        .initTimer(deviceID: this.deviceID, sensorID: this.sensorID);
   }
 
   @override
   Widget build(BuildContext context) {
-    List<SensorData> data = <SensorData>[
-      SensorData(createdDate: '08.00', value: '12'),
-      SensorData(createdDate: '08.15', value: '32'),
-      SensorData(createdDate: '08.30', value: '14'),
-      SensorData(createdDate: '08.45', value: '41'),
-      SensorData(createdDate: '09.00', value: '34'),
-      SensorData(createdDate: '09.15', value: '46'),
-      SensorData(createdDate: '09.30', value: '45'),
-      SensorData(createdDate: '09.45', value: '46'),
-      SensorData(createdDate: '10.00', value: '67'),
-      SensorData(createdDate: '10.15', value: '65'),
-      SensorData(createdDate: '10.30', value: '34'),
-      SensorData(createdDate: '10.45', value: '46'),
-      SensorData(createdDate: '11.00', value: '12'),
-      SensorData(createdDate: '11.30', value: '76'),
-    ];
-
     return Scaffold(
       backgroundColor: Colors.grey[350],
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            SensorSummaryProvider.timer.cancel();
+            Navigator.pop(context);
+          },
+        ),
         centerTitle: true,
         title: Text('White House'),
       ),
@@ -63,17 +53,20 @@ class _SensorScreen extends State {
           builder: (ctx, sensorSummaryProvider, _) => Column(
             children: <Widget>[
               ChartItem(
-                  name: 'Temperature',
-                  lastValue: '25.7',
-                  unitSymbol: '*C',
-                  data: data),
+                  name: sensorSummaryProvider.sensor.name,
+                  lastValue: sensorSummaryProvider
+                      .sensorData[sensorSummaryProvider.sensorData.length - 1]
+                      .value,
+                  unitSymbol: sensorSummaryProvider.sensor.unitSymbol,
+                  data: sensorSummaryProvider.sensorData),
               Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: DataTable(
                     headingRowHeight: 45,
                     horizontalMargin: 10,
-                    rows: _convertDataToDataRow(data),
+                    rows:
+                        _convertDataToDataRow(sensorSummaryProvider.sensorData),
                     columns: [
                       DataColumn(
                         label: Text(
@@ -101,24 +94,20 @@ class _SensorScreen extends State {
   }
 
   List<DataRow> _convertDataToDataRow(List<SensorData> list) {
-    return list
-        .asMap()
+    return list.reversed
+        .toList()
         .map(
-          (index, data) => MapEntry(
-            index,
-            DataRow(
-              cells: [
-                DataCell(
-                  Text(data.createdDate),
-                ),
-                DataCell(
-                  Text(data.value),
-                ),
-              ],
-            ),
+          (data) => DataRow(
+            cells: [
+              DataCell(
+                Text(data.createdDate),
+              ),
+              DataCell(
+                Text(data.value),
+              ),
+            ],
           ),
         )
-        .values
         .toList();
   }
 }

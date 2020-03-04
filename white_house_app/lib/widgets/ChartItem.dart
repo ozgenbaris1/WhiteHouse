@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:white_house_app/models/SensorData.dart';
 import 'package:white_house_app/widgets/Chart.dart';
@@ -117,7 +119,9 @@ class ChartItem extends StatelessWidget {
                           child: Column(
                             children: <Widget>[
                               Text('Minimum Value'),
-                              Text('12.3 *C'),
+                              Text(
+                                getMinValue(),
+                              ),
                             ],
                           ),
                         ),
@@ -125,7 +129,7 @@ class ChartItem extends StatelessWidget {
                           child: Column(
                             children: <Widget>[
                               Text('Average Value'),
-                              Text('19.5 *C'),
+                              Text(getAverageValue()),
                             ],
                           ),
                         ),
@@ -133,7 +137,9 @@ class ChartItem extends StatelessWidget {
                           child: Column(
                             children: <Widget>[
                               Text('Maximum Value'),
-                              Text('26.7 *C'),
+                              Text(
+                                getMaxValue(),
+                              ),
                             ],
                           ),
                         ),
@@ -188,5 +194,36 @@ class ChartItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String getMinValue() {
+    return data
+            .reduce((curr, next) =>
+                double.parse(curr.value) < double.parse(next.value)
+                    ? curr
+                    : next)
+            .value +
+        ' ' +
+        unitSymbol;
+  }
+
+  String getAverageValue() {
+    return (data
+                    .map((item) => double.parse(item.value))
+                    .reduce((a, b) => a + b) /
+                data.length)
+            .toStringAsFixed(1) + ' ' +
+        unitSymbol;
+  }
+
+  String getMaxValue() {
+    return data
+            .reduce((curr, next) =>
+                double.parse(curr.value) > double.parse(next.value)
+                    ? curr
+                    : next)
+            .value +
+        ' ' +
+        unitSymbol;
   }
 }

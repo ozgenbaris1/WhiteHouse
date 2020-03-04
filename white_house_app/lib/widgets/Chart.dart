@@ -12,38 +12,25 @@ class Chart extends StatelessWidget {
     return SfCartesianChart(
       primaryYAxis:
           NumericAxis(minimum: 10, maximum: 80, labelFormat: '{value} *C'),
-      tooltipBehavior: TooltipBehavior(
-          enable: true, header: 'Value', canShowMarker: false, format: 'point.y'
-          // builder: (dynamic data, dynamic point, dynamic series, int pointIndex,
-          //     int seriesIndex) {
-          //   return Container(
-          //     decoration: BoxDecoration(
-          //       gradient: LinearGradient(
-          //         begin: Alignment.topLeft,
-          //         end: Alignment.bottomRight,
-          //         colors: [Colors.green[200], Colors.lightGreen],
-          //       ),
-          //       // color: Colors.green,
-          //       borderRadius: BorderRadius.all(
-          //         Radius.circular(20),
-          //       ),
-          //     ),
-          //     margin: EdgeInsets.only(bottom: 50),
-          //     padding: EdgeInsets.all(10),
-          //     child: Text('${data.value}'),
-          //   );
-          // },
-          ),
+      // tooltipBehavior: TooltipBehavior(
+      //     enable: true,
+      //     header: 'Value',
+      //     canShowMarker: false,
+      //     format: 'point.y'),
       primaryXAxis: CategoryAxis(
         labelPlacement: LabelPlacement.onTicks,
-        labelRotation: -45,
+        labelRotation: -75,
       ),
       series: <LineSeries<SensorData, String>>[
         LineSeries<SensorData, String>(
-          markerSettings: MarkerSettings(isVisible: true),
+          enableTooltip: false,
+          color: Colors.blueAccent,
+          // markerSettings: MarkerSettings(isVisible: true),
           dataSource: this.data,
-          xValueMapper: (SensorData sales, _) => sales.createdDate,
-          yValueMapper: (SensorData sales, _) => double.parse(sales.value),
+          xValueMapper: (SensorData sensorData, _) =>
+              sensorData.createdDate.split(' ')[1],
+          yValueMapper: (SensorData sensorData, _) =>
+              double.parse(sensorData.value),
         )
       ],
     );

@@ -50,26 +50,37 @@ app.get("/getSensorDataSummary", (req, res) => {
         });
     }
 
-    var sensorData = getDataFromDatabase(`SELECT CreatedDate, Value FROM SensorDatas WHERE SensorDatas.DeviceID = ${req.query.DeviceID} AND SensorDatas.SensorID = ${req.query.SensorID} ORDER BY CreatedDate DESC LIMIT 50;`);
+    var sensor = getDataFromDatabase(`SELECT * FROM Sensors WHERE SensorID = ${req.query.SensorID};`)[0];
 
-    sensorData.forEach((sensorItem) => {
-        sensorItem.Value = sensorItem.Value.toFixed(1) //(Math.round(sensorItem.Value * 100) / 100).toFixed(1); // parseFloat(sensorItem.Value.toFixed(1)); 
-    });
+    var sensorData = getDataFromDatabase(`SELECT CreatedDate, Value FROM SensorDatas WHERE SensorDatas.DeviceID = ${req.query.DeviceID} AND ` +
+        `SensorDatas.SensorID = ${req.query.SensorID} ORDER BY SensorDatas.CreatedDate DESC LIMIT 10;`);
 
     sensorData.sort(function(a, b) {
-        if (a.CreatedDate < b.CreatedDate) {
+
+        var dateA = new Date(a.CreatedDate);
+        var dateB = new Date(b.CreatedDate);
+
+        if (dateA < dateB) {
             return -1;
         }
-        if (a.CreatedDate > b.CreatedDate) {
+        if (dateA > dateB) {
             return 1;
         }
         return 0;
     });
 
+    sensorData.forEach((sensorItem) => {
+        sensorItem.CreatedDate = formatDate(sensorItem.CreatedDate);
+        sensorItem.Value = sensorItem.Value.toFixed(1) //(Math.round(sensorItem.Value * 100) / 100).toFixed(1); // parseFloat(sensorItem.Value.toFixed(1)); 
+    });
+
     res.send({
         type: 'S',
         message: null,
-        data: sensorData
+        data: {
+            sensor: sensor,
+            sensorData: sensorData
+        }
     });
 });
 
@@ -154,4 +165,18 @@ function getDataFromDatabase(query) {
     var response = database.prepare(query).all();
     database.close();
     return response;
+}
+
+function formatDate(dateTime) {
+
+    var date = dateTime.split(" ")[0];
+    var time = dateTime.split(" ")[1];
+
+    var tmp = date.split("-");
+
+    var year = tmp[0]
+    var month = tmp[1]
+    var day = tmp[2]
+
+    return day + '.' + month + '.' + year + ' ' + time;
 }
