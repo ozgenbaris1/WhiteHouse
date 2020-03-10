@@ -55,7 +55,7 @@ app.get("/getSensorDataSummary", (req, res) => {
     var sensorData = getDataFromDatabase(`SELECT CreatedDate, Value FROM SensorDatas WHERE SensorDatas.DeviceID = ${req.query.DeviceID} AND ` +
         `SensorDatas.SensorID = ${req.query.SensorID} ORDER BY SensorDatas.CreatedDate DESC LIMIT 10;`);
 
-    sensorData.sort(function(a, b) {
+    sensorData.sort(function (a, b) {
 
         var dateA = new Date(a.CreatedDate);
         var dateB = new Date(b.CreatedDate);
