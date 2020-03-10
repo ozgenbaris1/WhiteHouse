@@ -212,7 +212,8 @@ class ChartItem extends StatelessWidget {
                     .map((item) => double.parse(item.value))
                     .reduce((a, b) => a + b) /
                 data.length)
-            .toStringAsFixed(1) + ' ' +
+            .toStringAsFixed(1) +
+        ' ' +
         unitSymbol;
   }
 
