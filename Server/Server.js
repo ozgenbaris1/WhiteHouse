@@ -55,7 +55,7 @@ app.get("/getSensorDataSummary", (req, res) => {
     var sensorData = getDataFromDatabase(`SELECT CreatedDate, Value FROM SensorDatas WHERE SensorDatas.DeviceID = ${req.query.DeviceID} AND ` +
         `SensorDatas.SensorID = ${req.query.SensorID} ORDER BY SensorDatas.CreatedDate DESC LIMIT 10;`);
 
-    sensorData.sort(function (a, b) {
+    sensorData.sort(function(a, b) {
 
         var dateA = new Date(a.CreatedDate);
         var dateB = new Date(b.CreatedDate);
@@ -80,6 +80,72 @@ app.get("/getSensorDataSummary", (req, res) => {
         data: {
             sensor: sensor,
             sensorData: sensorData
+        }
+    });
+});
+
+app.get("/getDailySensorData", (req, res) => {
+
+    var sensor = getDataFromDatabase(`SELECT * FROM Sensors WHERE SensorID = ${req.query.SensorID};`)[0];
+
+    var dailySensorData = getDataFromDatabase(`SELECT * from DailySensorData WHERE DeviceID = ${req.query.DeviceID} AND ` +
+        `SensorID = ${req.query.SensorID};`);
+
+    dailySensorData.forEach((item) => {
+        // item.CreatedDate = formatDate(item.CreatedDate);
+        item.Value = item.Value.toFixed(1) //(Math.round(sensorItem.Value * 100) / 100).toFixed(1); // parseFloat(sensorItem.Value.toFixed(1)); 
+    });
+
+    res.send({
+        type: 'S',
+        message: null,
+        data: {
+            sensor: sensor,
+            sensorData: dailySensorData
+        }
+    });
+});
+
+app.get("/getWeeklySensorData", (req, res) => {
+
+    var sensor = getDataFromDatabase(`SELECT * FROM Sensors WHERE SensorID = ${req.query.SensorID};`)[0];
+
+    var weeklySensorData = getDataFromDatabase(`SELECT * from WeeklySensorData WHERE DeviceID = ${req.query.DeviceID} AND ` +
+        `SensorID = ${req.query.SensorID};`);
+
+    weeklySensorData.forEach((item) => {
+        // item.CreatedDate = formatDate(item.CreatedDate);
+        item.Value = item.Value.toFixed(1) //(Math.round(sensorItem.Value * 100) / 100).toFixed(1); // parseFloat(sensorItem.Value.toFixed(1)); 
+    });
+
+    res.send({
+        type: 'S',
+        message: null,
+        data: {
+            sensor: sensor,
+            sensorData: weeklySensorData
+        }
+    });
+});
+
+app.get("/getYearlySensorData", (req, res) => {
+
+    var sensor = getDataFromDatabase(`SELECT * FROM Sensors WHERE SensorID = ${req.query.SensorID};`)[0];
+
+    var yearlySensorData = getDataFromDatabase(`SELECT * from YearlySensorData WHERE DeviceID = ${req.query.DeviceID} AND ` +
+        `SensorID = ${req.query.SensorID};`);
+
+    yearlySensorData.forEach((item) => {
+        // item.CreatedDate = formatDate(item.CreatedDate);
+        item.Value = item.Value.toFixed(1) //(Math.round(sensorItem.Value * 100) / 100).toFixed(1); // parseFloat(sensorItem.Value.toFixed(1)); 
+    });
+
+    res.send({
+        type: 'S',
+        message: null,
+        data: {
+            sensor: sensor,
+            sensorData: yearlySensorData
         }
     });
 });

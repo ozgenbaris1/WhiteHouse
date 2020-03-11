@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:white_house_app/helpers/Calculators.dart';
 import 'package:white_house_app/helpers/MyDecorations.dart';
 import 'package:white_house_app/helpers/MyTextStyles.dart';
 import 'package:white_house_app/models/SensorData.dart';
+import 'package:white_house_app/providers/SensorSummaryProvider.dart';
 
 class ChartItemTopRow extends StatelessWidget {
+  final int deviceID;
+  final int sensorID;
   final String name;
   final String lastValue;
   final String unitSymbol;
 
   ChartItemTopRow({
     Key key,
+    @required this.deviceID,
+    @required this.sensorID,
     @required this.name,
     @required this.lastValue,
     @required this.unitSymbol,
@@ -43,7 +49,11 @@ class ChartItemTopRow extends StatelessWidget {
             child: RawMaterialButton(
               constraints: BoxConstraints(),
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              onPressed: () {},
+              onPressed: () {
+                SensorSummaryProvider.timer.cancel();
+                Provider.of<SensorSummaryProvider>(context, listen: false)
+                    .initDailyTimer(deviceID: deviceID, sensorID: sensorID);
+              },
               child: Text("Day"),
             ),
           ),

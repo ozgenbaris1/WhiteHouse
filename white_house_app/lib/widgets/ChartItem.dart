@@ -10,6 +10,8 @@ import 'package:white_house_app/widgets/ChartItemBottomRow.dart';
 import 'package:white_house_app/widgets/ChartItemTopRow.dart';
 
 class ChartItem extends StatelessWidget {
+  final int deviceID;
+  final int sensorID;
   final String name;
   final String lastValue;
   final String unitSymbol;
@@ -17,6 +19,8 @@ class ChartItem extends StatelessWidget {
 
   ChartItem(
       {Key key,
+      @required this.deviceID,
+      @required this.sensorID,
       @required this.name,
       @required this.lastValue,
       @required this.unitSymbol,
@@ -35,7 +39,7 @@ class ChartItem extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 ChartItemTopRow(
-                    name: name, lastValue: lastValue, unitSymbol: unitSymbol),
+                    deviceID: deviceID, sensorID: sensorID, name: name, lastValue: lastValue, unitSymbol: unitSymbol),
                 Padding(
                   padding: EdgeInsets.only(bottom: 4.0),
                 ),

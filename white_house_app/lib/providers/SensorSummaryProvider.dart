@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:white_house_app/helpers/API.dart';
+import 'package:white_house_app/models/ApiResponse.dart';
 import 'package:white_house_app/models/Sensor.dart';
 import 'package:white_house_app/models/SensorData.dart';
 
@@ -17,10 +18,40 @@ class SensorSummaryProvider extends ChangeNotifier {
     });
   }
 
+  initDailyTimer({deviceID, sensorID}) {
+    timer = Timer.periodic(new Duration(microseconds: 10000), (timer) {
+      getDailySensorData(deviceID: deviceID, sensorID: sensorID);
+    });
+  }
+
   getSensorDataList({deviceID, sensorID}) async {
     var response =
         await API.getSensorSummary(deviceID: deviceID, sensorID: sensorID);
 
+    bindData(response);
+
+    notifyListeners();
+  }
+
+  getDailySensorData({deviceID, sensorID}) async {
+    var response =
+        await API.getDailySensorData(deviceID: deviceID, sensorID: sensorID);
+
+    bindData(response);
+
+    notifyListeners();
+  }
+
+  // getSensorDataList({deviceID, sensorID}) async {
+  //   var response =
+  //       await API.getSensorSummary(deviceID: deviceID, sensorID: sensorID);
+
+  //   bindData(response);
+
+  //   notifyListeners();
+  // }
+
+  bindData(ApiResponse response) {
     if (response.type == 'S') {
       var lvSensor = response.data['sensor'];
       var lvSensorData = response.data['sensorData'];
@@ -42,7 +73,5 @@ class SensorSummaryProvider extends ChangeNotifier {
         },
       ).toList();
     }
-
-    notifyListeners();
   }
 }

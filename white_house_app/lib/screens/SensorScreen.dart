@@ -37,7 +37,19 @@ class _SensorScreen extends State {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              SensorSummaryProvider.timer.cancel();
+              Navigator.pop(context);
+            },
+          ),
+          centerTitle: true,
+          title: Text('White House'),
+        ),
         body: SafeArea(
           child: Consumer<SensorSummaryProvider>(
             builder: (ctx, sensorSummaryProvider, _) => CustomScrollView(
@@ -48,6 +60,8 @@ class _SensorScreen extends State {
                   title: Text(sensorSummaryProvider.sensor.name),
                   floating: true,
                   flexibleSpace: ChartItem(
+                    deviceID : deviceID,
+                    sensorID : sensorID,
                     name: sensorSummaryProvider.sensor.name,
                     lastValue: sensorSummaryProvider
                         .sensorData[sensorSummaryProvider.sensorData.length - 1]
