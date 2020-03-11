@@ -24,4 +24,13 @@ class MyDecorations {
       Radius.circular(10),
     ),
   );
+
+  /* ChartItem Decorations */
+
+  static final ShapeDecoration rawMaterialButtonDecoration = ShapeDecoration(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30),
+      side: BorderSide(color: Colors.red),
+    ),
+  );
 }

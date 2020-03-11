@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:white_house_app/models/ApiResponse.dart';
 
-const baseUrl = "http://192.168.1.4:8080";
+const baseUrl = "http://192.168.1.21:8080";
 
 class API {
   static Future<ApiResponse> getDevices() async {

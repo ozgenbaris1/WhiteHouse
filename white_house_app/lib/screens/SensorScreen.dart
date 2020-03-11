@@ -94,67 +94,6 @@ class _SensorScreen extends State {
     );
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     backgroundColor: Colors.grey[350],
-  //     appBar: AppBar(
-  //       leading: IconButton(
-  //         icon: Icon(Icons.arrow_back),
-  //         onPressed: () {
-  //           SensorSummaryProvider.timer.cancel();
-  //           Navigator.pop(context);
-  //         },
-  //       ),
-  //       centerTitle: true,
-  //       title: Text('White House'),
-  //     ),
-  //     body: Container(
-  //       child: Consumer<SensorSummaryProvider>(
-  //         builder: (ctx, sensorSummaryProvider, _) => Column(
-  //           children: <Widget>[
-  //             ChartItem(
-  //               name: sensorSummaryProvider.sensor.name,
-  //               lastValue: sensorSummaryProvider
-  //                   .sensorData[sensorSummaryProvider.sensorData.length - 1]
-  //                   .value,
-  //               unitSymbol: sensorSummaryProvider.sensor.unitSymbol,
-  //               data: sensorSummaryProvider.sensorData,
-  //             ),
-  //             Expanded(
-  //               child: SingleChildScrollView(
-  //                 scrollDirection: Axis.vertical,
-  //                 child: DataTable(
-  //                   headingRowHeight: 45,
-  //                   horizontalMargin: 10,
-  //                   rows:
-  //                       _convertDataToDataRow(sensorSummaryProvider.sensorData),
-  //                   columns: [
-  //                     DataColumn(
-  //                       label: Text(
-  //                         'Created Date',
-  //                         style: TextStyle(
-  //                             fontSize: 15, fontWeight: FontWeight.bold),
-  //                       ),
-  //                     ),
-  //                     DataColumn(
-  //                       label: Text(
-  //                         'Value',
-  //                         style: TextStyle(
-  //                             fontSize: 15, fontWeight: FontWeight.bold),
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   List<DataRow> _convertDataToDataRow(List<SensorData> list) {
     return list.reversed
         .toList()
@@ -173,3 +112,64 @@ class _SensorScreen extends State {
         .toList();
   }
 }
+
+// @override
+// Widget build(BuildContext context) {
+//   return Scaffold(
+//     backgroundColor: Colors.grey[350],
+//     appBar: AppBar(
+//       leading: IconButton(
+//         icon: Icon(Icons.arrow_back),
+//         onPressed: () {
+//           SensorSummaryProvider.timer.cancel();
+//           Navigator.pop(context);
+//         },
+//       ),
+//       centerTitle: true,
+//       title: Text('White House'),
+//     ),
+//     body: Container(
+//       child: Consumer<SensorSummaryProvider>(
+//         builder: (ctx, sensorSummaryProvider, _) => Column(
+//           children: <Widget>[
+//             ChartItem(
+//               name: sensorSummaryProvider.sensor.name,
+//               lastValue: sensorSummaryProvider
+//                   .sensorData[sensorSummaryProvider.sensorData.length - 1]
+//                   .value,
+//               unitSymbol: sensorSummaryProvider.sensor.unitSymbol,
+//               data: sensorSummaryProvider.sensorData,
+//             ),
+//             Expanded(
+//               child: SingleChildScrollView(
+//                 scrollDirection: Axis.vertical,
+//                 child: DataTable(
+//                   headingRowHeight: 45,
+//                   horizontalMargin: 10,
+//                   rows:
+//                       _convertDataToDataRow(sensorSummaryProvider.sensorData),
+//                   columns: [
+//                     DataColumn(
+//                       label: Text(
+//                         'Created Date',
+//                         style: TextStyle(
+//                             fontSize: 15, fontWeight: FontWeight.bold),
+//                       ),
+//                     ),
+//                     DataColumn(
+//                       label: Text(
+//                         'Value',
+//                         style: TextStyle(
+//                             fontSize: 15, fontWeight: FontWeight.bold),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     ),
+//   );
+// }

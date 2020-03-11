@@ -29,26 +29,20 @@ class _DeviceScreen extends State {
         centerTitle: true,
         title: Text('White House'),
       ),
-      body: Container(
-        child: Consumer<DeviceSummaryProvider>(
-          builder: (ctx, deviceSummaryProvider, _) {
-            if (deviceSummaryProvider.deviceList != null) {
-              if (deviceSummaryProvider.deviceList.length > 0) {
-                return DeviceList(
-                  deviceList: deviceSummaryProvider.deviceList,
-                );
-              } else {
-                return Container(
-                  child: Text("No Data"),
-                );
-              }
-            } else {
-              return Container(
-                child: Text("No Data"),
+      body: Consumer<DeviceSummaryProvider>(
+        builder: (ctx, deviceSummaryProvider, _) {
+          if (deviceSummaryProvider.deviceList != null) {
+            if (deviceSummaryProvider.deviceList.length > 0) {
+              return DeviceList(
+                deviceList: deviceSummaryProvider.deviceList,
               );
+            } else {
+              return Text("No Data");
             }
-          },
-        ),
+          } else {
+            return Text("No Data");
+          }
+        },
       ),
     );
   }
