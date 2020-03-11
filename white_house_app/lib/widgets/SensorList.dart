@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:white_house_app/helpers/MyDecorations.dart';
 import 'package:white_house_app/models/SensorData.dart';
 import 'package:white_house_app/widgets/SensorItem.dart';
 
@@ -31,17 +32,7 @@ class SensorList extends StatelessWidget {
       data.add(
         Container(
           margin: EdgeInsets.all(3),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.red[300], Colors.red[300]],
-            ),
-            borderRadius: BorderRadius.all(
-              Radius.circular(10),
-            ),
-          ),
-          // width: 100,
+          decoration: MyDecorations.noSensorFoundDecoration,
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(

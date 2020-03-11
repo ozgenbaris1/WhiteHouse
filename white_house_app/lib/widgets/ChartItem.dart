@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:white_house_app/helpers/Calculators.dart';
+import 'package:white_house_app/helpers/MyTextStyles.dart';
 import 'package:white_house_app/models/SensorData.dart';
 import 'package:white_house_app/widgets/Chart.dart';
 
@@ -44,14 +46,11 @@ class ChartItem extends StatelessWidget {
                         children: <Widget>[
                           Text(
                             this.name,
-                            style: TextStyle(color: Colors.blue, fontSize: 15),
+                            style: MyTextStyles.sensorNameTextStyle,
                           ),
                           Text(
                             "${this.lastValue} ${this.unitSymbol}",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w800,
-                                fontSize: 24.0),
+                            style: MyTextStyles.sensorLastValueTextStyle,
                           ),
                         ],
                       ),
@@ -103,90 +102,41 @@ class ChartItem extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(bottom: 4.0),
                   ),
-
                   SizedBox(
                     height: 200,
                     child: Chart(
                       data: data,
                     ),
                   ),
-
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Container(
-                          child: Column(
-                            children: <Widget>[
-                              Text('Minimum Value'),
-                              Text(
-                                getMinValue(),
-                              ),
-                            ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Column(
+                        children: <Widget>[
+                          Text('Minimum Value'),
+                          Text(
+                            Calculators.getMinValue(data, unitSymbol),
                           ),
-                        ),
-                        Container(
-                          child: Column(
-                            children: <Widget>[
-                              Text('Average Value'),
-                              Text(getAverageValue()),
-                            ],
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Text('Average Value'),
+                          Text(
+                            Calculators.getAverageValue(data, unitSymbol),
                           ),
-                        ),
-                        Container(
-                          child: Column(
-                            children: <Widget>[
-                              Text('Maximum Value'),
-                              Text(
-                                getMaxValue(),
-                              ),
-                            ],
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Text('Maximum Value'),
+                          Text(
+                            Calculators.getMaxValue(data, unitSymbol),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
+                    ],
                   ),
-
-                  // Expanded(
-                  //   flex: 1,
-                  //   child: ,
-                  // ),
-
-                  // chart.LineChart(
-                  //   [
-                  //     chart.Series<SensorData, int>(
-                  //       id: 'Sales',
-                  //       colorFn: (_, __) =>
-                  //           chart.MaterialPalette.blue.shadeDefault,
-                  //       domainFn: (SensorData sensorData, _) =>
-                  //           int.parse(sensorData.createdDate),
-                  //       measureFn: (SensorData sensorData, _) =>
-                  //           int.parse(sensorData.value),
-                  //       data: data,
-                  //     ),
-                  //   ],
-                  //   animate: false,
-                  //   defaultRenderer:
-                  //       chart.LineRendererConfig(includePoints: true),
-                  // ),
-
-                  // SfCartesianChart(
-                  //   // Initialize category axis
-                  //   primaryXAxis: CategoryAxis(
-                  //     labelPlacement: LabelPlacement.onTicks,
-                  //     labelRotation: -45,
-                  //   ),
-                  //   series: <LineSeries<SensorData, String>>[
-                  //     LineSeries<SensorData, String>(
-                  //       // Bind data source
-                  //       dataSource: this.data,
-                  //       xValueMapper: (SensorData sales, _) =>
-                  //           sales.createdDate,
-                  //       yValueMapper: (SensorData sales, _) =>
-                  //           double.parse(sales.value),
-                  //     )
-                  //   ],
-                  // ),
                 ],
               ),
             ),
@@ -194,37 +144,5 @@ class ChartItem extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String getMinValue() {
-    return data
-            .reduce((curr, next) =>
-                double.parse(curr.value) < double.parse(next.value)
-                    ? curr
-                    : next)
-            .value +
-        ' ' +
-        unitSymbol;
-  }
-
-  String getAverageValue() {
-    return (data
-                    .map((item) => double.parse(item.value))
-                    .reduce((a, b) => a + b) /
-                data.length)
-            .toStringAsFixed(1) +
-        ' ' +
-        unitSymbol;
-  }
-
-  String getMaxValue() {
-    return data
-            .reduce((curr, next) =>
-                double.parse(curr.value) > double.parse(next.value)
-                    ? curr
-                    : next)
-            .value +
-        ' ' +
-        unitSymbol;
   }
 }

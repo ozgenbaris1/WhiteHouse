@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:white_house_app/helpers/MyTextStyles.dart';
 import 'package:white_house_app/models/DeviceSummary.dart';
 import 'package:white_house_app/widgets/SensorList.dart';
 
@@ -34,17 +35,14 @@ class DeviceItem extends StatelessWidget {
                         children: <Widget>[
                           Text(
                             deviceSummary.device.name,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w800,
-                                fontSize: 24.0),
+                            style: MyTextStyles.deviceNameTextStyle,
                           ),
                           SizedBox(
                             height: 5,
                           ),
                           Text(
                             deviceSummary.device.description,
-                            style: TextStyle(color: Colors.grey, fontSize: 15),
+                            style: MyTextStyles.deviceDescriptionTextStyle,
                           ),
                         ],
                       ),

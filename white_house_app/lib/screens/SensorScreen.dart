@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:white_house_app/helpers/MyTextStyles.dart';
 import 'package:white_house_app/models/SensorData.dart';
 import 'package:white_house_app/providers/SensorSummaryProvider.dart';
 import 'package:white_house_app/widgets/ChartItem.dart';
@@ -70,15 +71,13 @@ class _SensorScreen extends State {
                             DataColumn(
                               label: Text(
                                 'Created Date',
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
+                                style: MyTextStyles.dataColumnTextStyle,
                               ),
                             ),
                             DataColumn(
                               label: Text(
                                 'Value',
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
+                                style: MyTextStyles.dataColumnTextStyle,
                               ),
                             ),
                           ],
