@@ -36,9 +36,7 @@ class _SensorScreen extends State {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -57,7 +55,7 @@ class _SensorScreen extends State {
                 SliverAppBar(
                   forceElevated: true,
                   snap: true,
-                  title: Text(sensorSummaryProvider.sensor.name),
+                  // title: Text(sensorSummaryProvider.sensor.name),
                   floating: true,
                   flexibleSpace: ChartItem(
                     deviceID : deviceID,
@@ -104,8 +102,7 @@ class _SensorScreen extends State {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   List<DataRow> _convertDataToDataRow(List<SensorData> list) {

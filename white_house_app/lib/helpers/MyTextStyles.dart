@@ -16,7 +16,12 @@ class MyTextStyles {
 
   /* ChartItem TextStyles */
 
-  static final TextStyle sensorNameTextStyle = TextStyle(
+  static final TextStyle sensorNameSubTextStyle = TextStyle(
+    color: Colors.blue,
+    fontSize: 12,
+  );
+
+    static final TextStyle sensorNameTextStyle = TextStyle(
     color: Colors.blue,
     fontSize: 15,
   );

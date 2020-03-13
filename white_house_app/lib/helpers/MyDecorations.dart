@@ -30,7 +30,7 @@ class MyDecorations {
   static final ShapeDecoration rawMaterialButtonDecoration = ShapeDecoration(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(30),
-      side: BorderSide(color: Colors.red),
+      side: BorderSide(width: 2, color: Colors.blue),
     ),
   );
 }

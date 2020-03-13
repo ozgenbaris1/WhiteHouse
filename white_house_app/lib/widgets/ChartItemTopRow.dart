@@ -7,7 +7,7 @@ import 'package:white_house_app/helpers/MyTextStyles.dart';
 import 'package:white_house_app/models/SensorData.dart';
 import 'package:white_house_app/providers/SensorSummaryProvider.dart';
 
-class ChartItemTopRow extends StatelessWidget {
+class ChartItemTopRow extends StatefulWidget {
   final int deviceID;
   final int sensorID;
   final String name;
@@ -24,67 +24,125 @@ class ChartItemTopRow extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _ChartItemTopRowState createState() => _ChartItemTopRowState();
+}
+
+class _ChartItemTopRowState extends State<ChartItemTopRow> {
+  @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              this.name,
+              'Current',
+              style: MyTextStyles.sensorNameSubTextStyle,
+            ),
+            Text(
+              this.widget.name,
               style: MyTextStyles.sensorNameTextStyle,
             ),
             Text(
-              "${this.lastValue} ${this.unitSymbol}",
+              "${this.widget.lastValue} ${this.widget.unitSymbol}",
               style: MyTextStyles.sensorLastValueTextStyle,
             ),
           ],
         ),
         Spacer(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 5),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: MyDecorations.rawMaterialButtonDecoration,
-            child: RawMaterialButton(
-              constraints: BoxConstraints(),
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              onPressed: () {
-                SensorSummaryProvider.timer.cancel();
-                Provider.of<SensorSummaryProvider>(context, listen: false)
-                    .initDailyTimer(deviceID: deviceID, sensorID: sensorID);
-              },
-              child: Text("Day"),
-            ),
+        ToggleButtons(
+          borderColor: Colors.white,
+          borderRadius: BorderRadius.all(
+            Radius.circular(20),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 5),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: MyDecorations.rawMaterialButtonDecoration,
-            child: RawMaterialButton(
-              constraints: BoxConstraints(),
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              onPressed: () {},
-              child: Text("Week"),
+          children: <Widget>[
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Last'),
+                Text('10'),
+              ],
             ),
-          ),
+            Text('Daily'),
+            Text('Weekly'),
+            Text('Yearly'),
+          ],
+          onPressed: (int index) {
+            // setState(() {
+            //   isSelected[index] = !isSelected[index];
+            // });
+          },
+          isSelected: [true, false, false, false],
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 5),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: MyDecorations.rawMaterialButtonDecoration,
-            child: RawMaterialButton(
-              constraints: BoxConstraints(),
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              onPressed: () {},
-              child: Text("Month"),
-            ),
-          ),
-        ),
+        // filterButton(
+        //   title: 'Last 10',
+        //   isBold: true,
+        //   onPressed: () {
+        //     SensorSummaryProvider.timer.cancel();
+        //     Provider.of<SensorSummaryProvider>(context, listen: false)
+        //         .initDailyTimer(
+        //             deviceID: widget.deviceID, sensorID: widget.sensorID);
+        //   },
+        // ),
+        // filterButton(
+        //   title: 'Daily',
+        //   isBold: false,
+        //   onPressed: () {
+        //     SensorSummaryProvider.timer.cancel();
+        //     Provider.of<SensorSummaryProvider>(context, listen: false)
+        //         .initDailyTimer(
+        //             deviceID: widget.deviceID, sensorID: widget.sensorID);
+        //   },
+        // ),
+        // filterButton(
+        //   title: 'Weekly',
+        //   isBold: false,
+        //   onPressed: () {
+        //     SensorSummaryProvider.timer.cancel();
+        //     Provider.of<SensorSummaryProvider>(context, listen: false)
+        //         .initDailyTimer(
+        //             deviceID: widget.deviceID, sensorID: widget.sensorID);
+        //   },
+        // ),
+        // filterButton(
+        //   title: 'Yearly',
+        //   isBold: false,
+        //   onPressed: () {
+        //     SensorSummaryProvider.timer.cancel();
+        //     Provider.of<SensorSummaryProvider>(context, listen: false)
+        //         .initDailyTimer(
+        //             deviceID: widget.deviceID, sensorID: widget.sensorID);
+        //   },
+        // ),
       ],
+    );
+  }
+
+  Widget filterButton({title, isBold = false, onPressed}) {
+    FontWeight fw;
+
+    if (isBold) {
+      fw = FontWeight.bold;
+    } else {
+      fw = FontWeight.normal;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 3),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        // decoration: MyDecorations.rawMaterialButtonDecoration,
+        child: RawMaterialButton(
+          constraints: BoxConstraints(),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          onPressed: onPressed,
+          child: Text(
+            title,
+            style: TextStyle(fontWeight: fw),
+          ),
+        ),
+      ),
     );
   }
 }
