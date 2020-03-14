@@ -37,72 +37,70 @@ class _SensorScreen extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              SensorSummaryProvider.timer.cancel();
-              Navigator.pop(context);
-            },
-          ),
-          centerTitle: true,
-          title: Text('White House'),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            SensorSummaryProvider.timer.cancel();
+            Navigator.pop(context);
+          },
         ),
-        body: SafeArea(
-          child: Consumer<SensorSummaryProvider>(
-            builder: (ctx, sensorSummaryProvider, _) => CustomScrollView(
-              slivers: <Widget>[
-                SliverAppBar(
-                  forceElevated: true,
-                  snap: true,
-                  // title: Text(sensorSummaryProvider.sensor.name),
-                  floating: true,
-                  flexibleSpace: ChartItem(
-                    deviceID : deviceID,
-                    sensorID : sensorID,
-                    name: sensorSummaryProvider.sensor.name,
-                    lastValue: sensorSummaryProvider
-                        .sensorData[sensorSummaryProvider.sensorData.length - 1]
-                        .value,
-                    unitSymbol: sensorSummaryProvider.sensor.unitSymbol,
-                    data: sensorSummaryProvider.sensorData,
-                  ),
-                  expandedHeight: 360,
+        centerTitle: true,
+        title: Text('White House'),
+      ),
+      body: SafeArea(
+        child: Consumer<SensorSummaryProvider>(
+          builder: (ctx, sensorSummaryProvider, _) => CustomScrollView(
+            slivers: <Widget>[
+              SliverAppBar(
+                forceElevated: true,
+                snap: true,
+                // title: Text(sensorSummaryProvider.sensor.name),
+                floating: true,
+                flexibleSpace: ChartItem(
+                  deviceID: deviceID,
+                  sensorID: sensorID,
+                  name: sensorSummaryProvider.sensor.name,
+                  lastValue: sensorSummaryProvider.lastValue,
+                  unitSymbol: sensorSummaryProvider.sensor.unitSymbol,
+                  data: sensorSummaryProvider.sensorData,
                 ),
-                SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: DataTable(
-                          headingRowHeight: 45,
-                          horizontalMargin: 10,
-                          rows: _convertDataToDataRow(
-                              sensorSummaryProvider.sensorData),
-                          columns: [
-                            DataColumn(
-                              label: Text(
-                                'Created Date',
-                                style: MyTextStyles.dataColumnTextStyle,
-                              ),
+                expandedHeight: 360,
+              ),
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: DataTable(
+                        headingRowHeight: 45,
+                        horizontalMargin: 10,
+                        rows: _convertDataToDataRow(
+                            sensorSummaryProvider.sensorData),
+                        columns: [
+                          DataColumn(
+                            label: Text(
+                              'Created Date',
+                              style: MyTextStyles.dataColumnTextStyle,
                             ),
-                            DataColumn(
-                              label: Text(
-                                'Value',
-                                style: MyTextStyles.dataColumnTextStyle,
-                              ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Value',
+                              style: MyTextStyles.dataColumnTextStyle,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 
   List<DataRow> _convertDataToDataRow(List<SensorData> list) {

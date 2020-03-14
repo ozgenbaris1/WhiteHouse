@@ -3,25 +3,58 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:white_house_app/helpers/API.dart';
 import 'package:white_house_app/models/ApiResponse.dart';
+import 'package:white_house_app/models/DataFilter.dart';
 import 'package:white_house_app/models/Sensor.dart';
 import 'package:white_house_app/models/SensorData.dart';
 
 class SensorSummaryProvider extends ChangeNotifier {
   Sensor sensor;
   List<SensorData> sensorData;
+  String lastValue;
 
   static Timer timer;
 
-  initTimer({deviceID, sensorID}) {
-    timer = Timer.periodic(new Duration(microseconds: 10000), (timer) {
-      getSensorDataList(deviceID: deviceID, sensorID: sensorID);
-    });
+  initTimer({deviceID, sensorID, DataFilter dataFilter = DataFilter.last10}) {
+    Function timerFunction;
+
+    switch (dataFilter) {
+      case DataFilter.last10:
+        timerFunction = (timer) {
+          getLastSensorData(deviceID: deviceID, sensorID: sensorID);
+          getSensorDataList(deviceID: deviceID, sensorID: sensorID);
+        };
+        break;
+      case DataFilter.daily:
+        timerFunction = (timer) {
+          getLastSensorData(deviceID: deviceID, sensorID: sensorID);
+          getDailySensorData(deviceID: deviceID, sensorID: sensorID);
+        };
+        break;
+      case DataFilter.weekly:
+        timerFunction = (timer) {
+          getLastSensorData(deviceID: deviceID, sensorID: sensorID);
+          getWeeklySensorData(deviceID: deviceID, sensorID: sensorID);
+        };
+        break;
+      case DataFilter.yearly:
+        timerFunction = (timer) {
+          getLastSensorData(deviceID: deviceID, sensorID: sensorID);
+          getYearlySensorData(deviceID: deviceID, sensorID: sensorID);
+        };
+        break;
+      default:
+    }
+
+    timer = Timer.periodic(new Duration(microseconds: 10000), timerFunction);
   }
 
-  initDailyTimer({deviceID, sensorID}) {
-    timer = Timer.periodic(new Duration(microseconds: 10000), (timer) {
-      getDailySensorData(deviceID: deviceID, sensorID: sensorID);
-    });
+  getLastSensorData({deviceID, sensorID}) async {
+    var response =
+        await API.getLastSensorData(deviceID: deviceID, sensorID: sensorID);
+
+    lastValue = response.data["lastValue"];
+
+    notifyListeners();
   }
 
   getSensorDataList({deviceID, sensorID}) async {
@@ -42,14 +75,23 @@ class SensorSummaryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // getSensorDataList({deviceID, sensorID}) async {
-  //   var response =
-  //       await API.getSensorSummary(deviceID: deviceID, sensorID: sensorID);
+  getWeeklySensorData({deviceID, sensorID}) async {
+    var response =
+        await API.getWeeklySensorData(deviceID: deviceID, sensorID: sensorID);
 
-  //   bindData(response);
+    bindData(response);
 
-  //   notifyListeners();
-  // }
+    notifyListeners();
+  }
+
+  getYearlySensorData({deviceID, sensorID}) async {
+    var response =
+        await API.getYearlySensorData(deviceID: deviceID, sensorID: sensorID);
+
+    bindData(response);
+
+    notifyListeners();
+  }
 
   bindData(ApiResponse response) {
     if (response.type == 'S') {

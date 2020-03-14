@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:white_house_app/helpers/Calculators.dart';
-import 'package:white_house_app/helpers/MyDecorations.dart';
 import 'package:white_house_app/helpers/MyTextStyles.dart';
-import 'package:white_house_app/models/SensorData.dart';
+import 'package:white_house_app/models/DataFilter.dart';
 import 'package:white_house_app/providers/SensorSummaryProvider.dart';
 
 class ChartItemTopRow extends StatefulWidget {
@@ -28,6 +25,29 @@ class ChartItemTopRow extends StatefulWidget {
 }
 
 class _ChartItemTopRowState extends State<ChartItemTopRow> {
+  List<FilterButtonData> buttonList = [
+    FilterButtonData(
+      filter: DataFilter.last10,
+      title: 'Last 10',
+      isBold: true,
+    ),
+    FilterButtonData(
+      filter: DataFilter.daily,
+      title: 'Daily',
+      isBold: false,
+    ),
+    FilterButtonData(
+      filter: DataFilter.weekly,
+      title: 'Weekly',
+      isBold: false,
+    ),
+    FilterButtonData(
+      filter: DataFilter.yearly,
+      title: 'Yearly',
+      isBold: false,
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -51,70 +71,38 @@ class _ChartItemTopRowState extends State<ChartItemTopRow> {
           ],
         ),
         Spacer(),
-        ToggleButtons(
-          borderColor: Colors.white,
-          borderRadius: BorderRadius.all(
-            Radius.circular(20),
-          ),
-          children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Last'),
-                Text('10'),
-              ],
-            ),
-            Text('Daily'),
-            Text('Weekly'),
-            Text('Yearly'),
-          ],
-          onPressed: (int index) {
-            // setState(() {
-            //   isSelected[index] = !isSelected[index];
-            // });
-          },
-          isSelected: [true, false, false, false],
+        Row(
+          children: buttonList.map<Widget>(
+            (item) {
+              return filterButton(
+                title: item.title,
+                isBold: item.isBold,
+                onPressed: () {
+                  SensorSummaryProvider.timer.cancel();
+                  Provider.of<SensorSummaryProvider>(context, listen: false)
+                      .initTimer(
+                          dataFilter: item.filter,
+                          deviceID: widget.deviceID,
+                          sensorID: widget.sensorID);
+
+                  var tmpList = buttonList;
+
+                  tmpList.forEach((tmp) {
+                    if (item.title == tmp.title) {
+                      tmp.isBold = true;
+                    } else {
+                      tmp.isBold = false;
+                    }
+                  });
+
+                  setState(() {
+                    buttonList = tmpList;
+                  });
+                },
+              );
+            },
+          ).toList(),
         ),
-        // filterButton(
-        //   title: 'Last 10',
-        //   isBold: true,
-        //   onPressed: () {
-        //     SensorSummaryProvider.timer.cancel();
-        //     Provider.of<SensorSummaryProvider>(context, listen: false)
-        //         .initDailyTimer(
-        //             deviceID: widget.deviceID, sensorID: widget.sensorID);
-        //   },
-        // ),
-        // filterButton(
-        //   title: 'Daily',
-        //   isBold: false,
-        //   onPressed: () {
-        //     SensorSummaryProvider.timer.cancel();
-        //     Provider.of<SensorSummaryProvider>(context, listen: false)
-        //         .initDailyTimer(
-        //             deviceID: widget.deviceID, sensorID: widget.sensorID);
-        //   },
-        // ),
-        // filterButton(
-        //   title: 'Weekly',
-        //   isBold: false,
-        //   onPressed: () {
-        //     SensorSummaryProvider.timer.cancel();
-        //     Provider.of<SensorSummaryProvider>(context, listen: false)
-        //         .initDailyTimer(
-        //             deviceID: widget.deviceID, sensorID: widget.sensorID);
-        //   },
-        // ),
-        // filterButton(
-        //   title: 'Yearly',
-        //   isBold: false,
-        //   onPressed: () {
-        //     SensorSummaryProvider.timer.cancel();
-        //     Provider.of<SensorSummaryProvider>(context, listen: false)
-        //         .initDailyTimer(
-        //             deviceID: widget.deviceID, sensorID: widget.sensorID);
-        //   },
-        // ),
       ],
     );
   }
@@ -145,4 +133,12 @@ class _ChartItemTopRowState extends State<ChartItemTopRow> {
       ),
     );
   }
+}
+
+class FilterButtonData {
+  DataFilter filter;
+  String title;
+  bool isBold;
+
+  FilterButtonData({this.title, this.isBold, this.filter});
 }

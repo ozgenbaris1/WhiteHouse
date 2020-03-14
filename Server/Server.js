@@ -84,6 +84,25 @@ app.get("/getSensorDataSummary", (req, res) => {
     });
 });
 
+app.get("/getLastSensorData", (req, res) => {
+
+    if (req.query['DeviceID'] == null || req.query['SensorID'] == null) {
+        res.send({
+            type: 'E',
+            message: 'Wrong Query Parameters',
+            data: []
+        });
+    }
+
+    res.send({
+        type: 'S',
+        message: null,
+        data: {
+            lastValue: getDataFromDatabase(`SELECT Value, Max(CreatedDate) FROM SensorDatas WHERE DeviceID = ${req.query.DeviceID} AND SensorID = ${req.query.SensorID};`)[0].Value.toFixed(1),
+        }
+    });
+});
+
 app.get("/getDailySensorData", (req, res) => {
 
     var sensor = getDataFromDatabase(`SELECT * FROM Sensors WHERE SensorID = ${req.query.SensorID};`)[0];
@@ -149,50 +168,6 @@ app.get("/getYearlySensorData", (req, res) => {
         }
     });
 });
-
-// app.get("/getSensorDataSummary", (req, res) => {
-
-//     if (req.query['DeviceID'] == null || req.query['SensorID'] == null) {
-//         res.send({
-//             type: 'E',
-//             message: 'Wrong Query Parameters',
-//             data: []
-//         });
-//     }
-
-//     var data = [];
-
-//     var sensors = getDataFromDatabase(`SELECT * FROM Device_Sensor LEFT JOIN Sensors ON Device_Sensor.SensorID = Sensors.SensorID WHERE DeviceID = ${req.query.DeviceID};`);
-
-//     sensors.forEach((item) => {
-//         var sensorData = getDataFromDatabase(`SELECT * FROM SensorDatas WHERE DeviceID = ${req.query.DeviceID} AND SensorID = ${item.SensorID} ORDER BY CreatedDate DESC LIMIT 50;`);
-
-//         sensorData.forEach((sensorItem) => {
-//             sensorItem.Value = sensorItem.Value.toFixed(1) //(Math.round(sensorItem.Value * 100) / 100).toFixed(1); // parseFloat(sensorItem.Value.toFixed(1)); 
-//         });
-
-//         sensorData.sort(function(a, b) {
-//             if (a.CreatedDate < b.CreatedDate) {
-//                 return -1;
-//             }
-//             if (a.CreatedDate > b.CreatedDate) {
-//                 return 1;
-//             }
-//             return 0;
-//         });
-
-//         data.push({
-//             sensor: item,
-//             sensorData: sensorData
-//         })
-//     });
-
-//     res.send({
-//         type: 'S',
-//         message: null,
-//         data: data
-//     });
-// });
 
 app.post("/insertSensorData", (req, res) => {
 

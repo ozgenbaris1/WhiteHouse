@@ -27,8 +27,13 @@ class Chart extends StatelessWidget {
           color: Colors.blueAccent,
           // markerSettings: MarkerSettings(isVisible: true),
           dataSource: this.data,
-          xValueMapper: (SensorData sensorData, _) =>
-              sensorData.createdDate.split(' ')[1],
+          xValueMapper: (SensorData sensorData, _) {
+            if (sensorData.createdDate.contains(' ')) {
+              return sensorData.createdDate.split(' ')[1];
+            } else {
+              return sensorData.createdDate;
+            }
+          },
           yValueMapper: (SensorData sensorData, _) =>
               double.parse(sensorData.value),
         )
