@@ -19,19 +19,19 @@ class ChartItemBottomRow extends StatelessWidget {
       children: <Widget>[
         Column(
           children: <Widget>[
-            Text('Minimum Value'),
+            Text('Minimum'),
             Text(Calculators.getMinValue(data) + ' ' + unitSymbol),
           ],
         ),
         Column(
           children: <Widget>[
-            Text('Average Value'),
+            Text('Average'),
             Text(Calculators.getAverageValue(data) + ' ' + unitSymbol),
           ],
         ),
         Column(
           children: <Widget>[
-            Text('Maximum Value'),
+            Text('Maximum'),
             Text(Calculators.getMaxValue(data) + ' ' + unitSymbol),
           ],
         ),

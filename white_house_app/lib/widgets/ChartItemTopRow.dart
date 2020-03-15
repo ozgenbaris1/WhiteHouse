@@ -119,7 +119,7 @@ class _ChartItemTopRowState extends State<ChartItemTopRow> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 3),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        padding: EdgeInsets.symmetric(horizontal: 1, vertical: 5),
         // decoration: MyDecorations.rawMaterialButtonDecoration,
         child: RawMaterialButton(
           constraints: BoxConstraints(),
@@ -127,7 +127,7 @@ class _ChartItemTopRowState extends State<ChartItemTopRow> {
           onPressed: onPressed,
           child: Text(
             title,
-            style: TextStyle(fontWeight: fw),
+            style: TextStyle(fontWeight: fw, fontSize: 13),
           ),
         ),
       ),

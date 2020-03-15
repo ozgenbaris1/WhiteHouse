@@ -18,12 +18,12 @@ class MyTextStyles {
 
   static final TextStyle sensorNameSubTextStyle = TextStyle(
     color: Colors.blue,
-    fontSize: 12,
+    fontSize: 12.0,
   );
 
     static final TextStyle sensorNameTextStyle = TextStyle(
     color: Colors.blue,
-    fontSize: 15,
+    fontSize: 15.0,
   );
 
   static final TextStyle sensorLastValueTextStyle = TextStyle(
