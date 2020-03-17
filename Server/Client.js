@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-setInterval(doRequest, 10000);
+setInterval(doRequest, 5000);
 
 function doRequest() {
     axios.post('http://localhost:8080/insertSensorData', randomValueGenerator()).then((res) => {
@@ -31,6 +31,10 @@ function randomValueGenerator() {
     }
 
     data.Value = Math.random().toFixed(2) * 30 + 20;
+
+    console.log('Request: ');
+    console.log(data);
+    // console.log('DeviceID: ' + data.DeviceID + ', SensorID: ' + data.SensorID + ', Value: ' + data.Value);
 
     return data
 }

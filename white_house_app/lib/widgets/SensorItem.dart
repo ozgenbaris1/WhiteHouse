@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:white_house_app/helpers/MyDecorations.dart';
+import 'package:white_house_app/models/Device.dart';
 import 'package:white_house_app/models/SensorData.dart';
+import 'package:white_house_app/providers/DeviceProvider.dart';
 import 'package:white_house_app/screens/SensorScreen.dart';
 
 class SensorItem extends StatelessWidget {
@@ -14,6 +16,8 @@ class SensorItem extends StatelessWidget {
     return FlatButton(
       padding: EdgeInsets.all(0),
       onPressed: () {
+        DeviceSummaryProvider.timer.cancel();
+
         Navigator.push(
           context,
           MaterialPageRoute(

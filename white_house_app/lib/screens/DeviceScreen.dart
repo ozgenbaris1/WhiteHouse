@@ -18,7 +18,7 @@ class _DeviceScreen extends State {
 
   initDataProviders() async {
     await Provider.of<DeviceSummaryProvider>(context, listen: false)
-        .getDevices();
+        .initTimer();
   }
 
   @override

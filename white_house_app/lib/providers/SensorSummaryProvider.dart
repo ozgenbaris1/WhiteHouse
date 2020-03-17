@@ -45,7 +45,7 @@ class SensorSummaryProvider extends ChangeNotifier {
       default:
     }
 
-    timer = Timer.periodic(new Duration(microseconds: 10000), timerFunction);
+    timer = Timer.periodic(new Duration(microseconds: 1000), timerFunction);
   }
 
   getLastSensorData({deviceID, sensorID}) async {

@@ -35,7 +35,7 @@ class ChartItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.0),
         child: InkWell(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(12.0),
             child: Column(
               children: <Widget>[
                 ChartItemTopRow(

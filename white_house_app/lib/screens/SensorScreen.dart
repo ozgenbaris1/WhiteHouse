@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:snapping_sheet/snapping_sheet.dart';
 import 'package:white_house_app/helpers/MyTextStyles.dart';
 import 'package:white_house_app/models/SensorData.dart';
 import 'package:white_house_app/providers/SensorSummaryProvider.dart';
@@ -50,55 +51,162 @@ class _SensorScreen extends State {
       ),
       body: SafeArea(
         child: Consumer<SensorSummaryProvider>(
-          builder: (ctx, sensorSummaryProvider, _) => CustomScrollView(
-            slivers: <Widget>[
-              SliverAppBar(
-                forceElevated: true,
-                snap: true,
-                // title: Text(sensorSummaryProvider.sensor.name),
-                floating: true,
-                flexibleSpace: ChartItem(
-                  deviceID: deviceID,
-                  sensorID: sensorID,
-                  name: sensorSummaryProvider.sensor.name,
-                  lastValue: sensorSummaryProvider.lastValue,
-                  unitSymbol: sensorSummaryProvider.sensor.unitSymbol,
-                  data: sensorSummaryProvider.sensorData,
-                ),
-                expandedHeight: 360,
+          builder: (ctx, sensorSummaryProvider, _) => SnappingSheet(
+            snapPositions: <SnapPosition>[
+              SnapPosition(positionPixel: 0),
+              SnapPosition(positionPixel: 350),
+            ],
+            snappingSheetController: SnappingSheetController(),
+            child: Container(
+              // color: Colors.red,
+              child: ChartItem(
+                deviceID: deviceID,
+                sensorID: sensorID,
+                name: sensorSummaryProvider.sensor.name,
+                lastValue: sensorSummaryProvider.lastValue,
+                unitSymbol: sensorSummaryProvider.sensor.unitSymbol,
+                data: sensorSummaryProvider.sensorData,
               ),
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: DataTable(
-                        headingRowHeight: 45,
-                        horizontalMargin: 10,
-                        rows: _convertDataToDataRow(
-                            sensorSummaryProvider.sensorData),
-                        columns: [
-                          DataColumn(
-                            label: Text(
-                              'Created Date',
-                              style: MyTextStyles.dataColumnTextStyle,
-                            ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Value',
-                              style: MyTextStyles.dataColumnTextStyle,
-                            ),
-                          ),
-                        ],
+            ),
+            grabbing: Container(
+              padding: EdgeInsets.only(left: 25, right: 25),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Icon(
+                      Icons.arrow_upward,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                    Text(
+                      'Load More',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_upward,
+                      color: Colors.white,
+                      size: 30,
+                    )
+                  ],
+                ),
+              ),
+              color: Colors.green,
+            ),
+            sheetBelow: SingleChildScrollView(
+              child: Container(
+                color: Colors.white,
+                child: DataTable(
+                  headingRowHeight: 45,
+                  horizontalMargin: 10,
+                  rows: _convertDataToDataRow(sensorSummaryProvider.sensorData),
+                  columns: [
+                    DataColumn(
+                      label: Text(
+                        'Created Date',
+                        style: MyTextStyles.dataColumnTextStyle,
+                      ),
+                    ),
+                    DataColumn(
+                      label: Text(
+                        'Value',
+                        style: MyTextStyles.dataColumnTextStyle,
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
+
+        // SingleChildScrollView(
+        //   child: Column(
+        //     children: <Widget>[
+        //       InkWell(
+        //         child: ChartItem(
+        //           deviceID: deviceID,
+        //           sensorID: sensorID,
+        //           name: sensorSummaryProvider.sensor.name,
+        //           lastValue: sensorSummaryProvider.lastValue,
+        //           unitSymbol: sensorSummaryProvider.sensor.unitSymbol,
+        //           data: sensorSummaryProvider.sensorData,
+        //         ),
+        //       ),
+        //       DataTable(
+        //         headingRowHeight: 45,
+        //         horizontalMargin: 10,
+        //         rows: _convertDataToDataRow(sensorSummaryProvider.sensorData),
+        //         columns: [
+        //           DataColumn(
+        //             label: Text(
+        //               'Created Date',
+        //               style: MyTextStyles.dataColumnTextStyle,
+        //             ),
+        //           ),
+        //           DataColumn(
+        //             label: Text(
+        //               'Value',
+        //               style: MyTextStyles.dataColumnTextStyle,
+        //             ),
+        //           ),
+        //         ],
+        //       ),
+        //     ],
+        //   ),
+        // ),
+
+        // CustomScrollView(
+        //   slivers: <Widget>[
+        //     // SliverAppBar(
+        //     //   leading: SizedBox(),
+        //     //   forceElevated: true,
+        //     //   snap: true,
+        //     //   floating: true,
+        //     //   flexibleSpace: ChartItem(
+        //     //     deviceID: deviceID,
+        //     //     sensorID: sensorID,
+        //     //     name: sensorSummaryProvider.sensor.name,
+        //     //     lastValue: sensorSummaryProvider.lastValue,
+        //     //     unitSymbol: sensorSummaryProvider.sensor.unitSymbol,
+        //     //     data: sensorSummaryProvider.sensorData,
+        //     //   ),
+        //     //   expandedHeight: 360,
+        //     // ),
+        //     // SliverList(
+        //     //   delegate: SliverChildListDelegate(
+        //     //     [
+        //     //       Padding(
+        //     //         padding: const EdgeInsets.all(8.0),
+        //     //         child: DataTable(
+        //     //           headingRowHeight: 45,
+        //     //           horizontalMargin: 10,
+        //     //           rows: _convertDataToDataRow(
+        //     //               sensorSummaryProvider.sensorData),
+        //     //           columns: [
+        //     //             DataColumn(
+        //     //               label: Text(
+        //     //                 'Created Date',
+        //     //                 style: MyTextStyles.dataColumnTextStyle,
+        //     //               ),
+        //     //             ),
+        //     //             DataColumn(
+        //     //               label: Text(
+        //     //                 'Value',
+        //     //                 style: MyTextStyles.dataColumnTextStyle,
+        //     //               ),
+        //     //             ),
+        //     //           ],
+        //     //         ),
+        //     //       ),
+        //     //     ],
+        //     //   ),
+        //     // ),
+        //   ],
+        // ),
       ),
     );
   }

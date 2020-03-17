@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:white_house_app/helpers/API.dart';
 import 'package:white_house_app/models/Device.dart';
@@ -6,6 +8,14 @@ import 'package:white_house_app/models/SensorData.dart';
 
 class DeviceSummaryProvider extends ChangeNotifier {
   List<DeviceSummary> deviceList;
+
+  static Timer timer;
+
+  initTimer() {
+    timer = Timer.periodic(new Duration(microseconds: 1000), (timer) {
+      getDevices();
+    });
+  }
 
   getDevices() async {
     var response = await API.getDevices();
