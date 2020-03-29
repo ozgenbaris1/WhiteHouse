@@ -1,18 +1,17 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:white_house_app/helpers/API.dart';
 import 'package:white_house_app/models/Device.dart';
-import 'package:white_house_app/models/DeviceSummary.dart';
+import 'package:white_house_app/models/Overview.dart';
 import 'package:white_house_app/models/SensorData.dart';
 
-class DeviceSummaryProvider extends ChangeNotifier {
-  List<DeviceSummary> deviceList;
+class OverviewProvider extends ChangeNotifier {
+  List<Overview> overviewList;
 
   static Timer timer;
 
   initTimer() {
-    timer = Timer.periodic(new Duration(microseconds: 1000), (timer) {
+    timer = Timer.periodic(new Duration(milliseconds: 1000), (timer) {
       getDevices();
     });
   }
@@ -23,7 +22,7 @@ class DeviceSummaryProvider extends ChangeNotifier {
     if (response.type == 'S') {
       Iterable list = response.data;
 
-      deviceList = list.map((item) {
+      overviewList = list.map((item) {
         var sensorDataList = item['SensorDataList'];
 
         Device device = new Device(
@@ -45,7 +44,7 @@ class DeviceSummaryProvider extends ChangeNotifier {
             )
             .toList();
 
-        return new DeviceSummary(device: device, sensorDataList: data);
+        return new Overview(device: device, sensorDataList: data);
       }).toList();
 
       print("Done");

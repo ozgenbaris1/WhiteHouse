@@ -1,9 +1,9 @@
 import 'package:white_house_app/models/Device.dart';
 import 'package:white_house_app/models/SensorData.dart';
 
-class DeviceSummary {
+class Overview {
   Device device;
   List<SensorData> sensorDataList;
 
-  DeviceSummary({this.device, this.sensorDataList});
+  Overview({this.device, this.sensorDataList});
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:white_house_app/helpers/MyDecorations.dart';
 import 'package:white_house_app/models/SensorData.dart';
+import 'package:white_house_app/styles/MyDecorations.dart';
 import 'package:white_house_app/widgets/SensorItem.dart';
 
-class SensorList extends StatelessWidget {
-  int deviceID;
-  List<SensorData> sensorList;
+class SensorItemList extends StatelessWidget {
+  final int deviceID;
+  final List<SensorData> sensorList;
 
-  SensorList({this.deviceID, this.sensorList});
+  SensorItemList({this.deviceID, this.sensorList});
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +15,14 @@ class SensorList extends StatelessWidget {
       borderRadius: BorderRadius.all(
         Radius.circular(10),
       ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: buildSensorList(),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: buildSensorList(),
+          ),
         ),
       ),
     );
@@ -28,11 +31,11 @@ class SensorList extends StatelessWidget {
   List<Widget> buildSensorList() {
     List<Widget> data = new List<Widget>();
 
-    if (sensorList.length < 1) {
+    if (sensorList.isEmpty) {
       data.add(
         Container(
           margin: EdgeInsets.all(3),
-          decoration: MyDecorations.noSensorFoundDecoration,
+          decoration: SensorListDecorations.noSensorFound,
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(

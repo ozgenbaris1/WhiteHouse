@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:white_house_app/helpers/MyDecorations.dart';
-import 'package:white_house_app/models/Device.dart';
 import 'package:white_house_app/models/SensorData.dart';
-import 'package:white_house_app/providers/DeviceProvider.dart';
+import 'package:white_house_app/providers/OverviewProvider.dart';
 import 'package:white_house_app/screens/SensorScreen.dart';
+import 'package:white_house_app/styles/MyDecorations.dart';
 
 class SensorItem extends StatelessWidget {
-  int deviceID;
-  SensorData sensorData;
+  final int deviceID;
+  final SensorData sensorData;
 
   SensorItem({this.deviceID, this.sensorData});
 
@@ -16,7 +15,7 @@ class SensorItem extends StatelessWidget {
     return FlatButton(
       padding: EdgeInsets.all(0),
       onPressed: () {
-        DeviceSummaryProvider.timer.cancel();
+        OverviewProvider.timer.cancel();
 
         Navigator.push(
           context,
@@ -25,12 +24,13 @@ class SensorItem extends StatelessWidget {
               deviceID: deviceID,
               sensorID: sensorData.sensorID,
             ),
+            fullscreenDialog: true,
           ),
         );
       },
       child: Container(
         margin: EdgeInsets.all(3),
-        decoration: MyDecorations.sensorDataDecoration,
+        decoration: SensorItemDecorations.sensorData,
         width: 130,
         child: Padding(
           padding: const EdgeInsets.all(10.0),

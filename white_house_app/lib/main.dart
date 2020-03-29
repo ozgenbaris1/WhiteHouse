@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:white_house_app/providers/DeviceProvider.dart';
-import 'package:white_house_app/providers/SensorSummaryProvider.dart';
+import 'package:white_house_app/providers/OverviewProvider.dart';
+import 'package:white_house_app/providers/SensorDataProvider.dart';
 import 'package:white_house_app/screens/DeviceScreen.dart';
 import 'package:syncfusion_flutter_core/core.dart';
 
@@ -18,18 +19,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => DeviceSummaryProvider()),
-        ChangeNotifierProvider(create: (context) => SensorSummaryProvider()),
+        ChangeNotifierProvider(create: (context) => OverviewProvider()),
+        ChangeNotifierProvider(create: (context) => SensorDataProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'White House',
         theme: ThemeData(
-          primarySwatch: Colors.green,
+          textTheme: GoogleFonts.montserratAlternatesTextTheme(),
         ),
-        home: Container(
-          child: DeviceScreen(),
-        ),
+        home: DeviceScreen(),
       ),
     );
   }

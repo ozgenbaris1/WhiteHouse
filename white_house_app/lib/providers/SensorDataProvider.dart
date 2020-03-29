@@ -7,7 +7,7 @@ import 'package:white_house_app/models/DataFilter.dart';
 import 'package:white_house_app/models/Sensor.dart';
 import 'package:white_house_app/models/SensorData.dart';
 
-class SensorSummaryProvider extends ChangeNotifier {
+class SensorDataProvider extends ChangeNotifier {
   Sensor sensor;
   List<SensorData> sensorData;
   String lastValue;
@@ -21,7 +21,7 @@ class SensorSummaryProvider extends ChangeNotifier {
       case DataFilter.last10:
         timerFunction = (timer) {
           getLastSensorData(deviceID: deviceID, sensorID: sensorID);
-          getSensorDataList(deviceID: deviceID, sensorID: sensorID);
+          getLast10SensorData(deviceID: deviceID, sensorID: sensorID);
         };
         break;
       case DataFilter.daily:
@@ -45,7 +45,7 @@ class SensorSummaryProvider extends ChangeNotifier {
       default:
     }
 
-    timer = Timer.periodic(new Duration(microseconds: 1000), timerFunction);
+    timer = Timer.periodic(new Duration(milliseconds: 1000), timerFunction);
   }
 
   getLastSensorData({deviceID, sensorID}) async {
@@ -57,9 +57,9 @@ class SensorSummaryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  getSensorDataList({deviceID, sensorID}) async {
+  getLast10SensorData({deviceID, sensorID}) async {
     var response =
-        await API.getSensorSummary(deviceID: deviceID, sensorID: sensorID);
+        await API.getLast10SensorData(deviceID: deviceID, sensorID: sensorID);
 
     bindData(response);
 

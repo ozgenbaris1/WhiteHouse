@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:white_house_app/helpers/Calculators.dart';
 import 'package:white_house_app/models/SensorData.dart';
 
 class Chart extends StatelessWidget {
-  List<SensorData> data;
+  final List<SensorData> data;
+  final String unitSymbol;
 
-  Chart({this.data});
+  Chart({@required this.data, @required this.unitSymbol});
 
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
-      primaryYAxis:
-          NumericAxis(minimum: 10, maximum: 80, labelFormat: '{value} *C'),
+      primaryYAxis: NumericAxis(
+        minimum: double.parse(Calculators.getMinValue(data)),
+        maximum: double.parse(Calculators.getMaxValue(data)),
+        labelFormat: '{value} $unitSymbol',
+      ),
       // tooltipBehavior: TooltipBehavior(
       //     enable: true,
       //     header: 'Value',
@@ -23,20 +28,20 @@ class Chart extends StatelessWidget {
       ),
       series: <LineSeries<SensorData, String>>[
         LineSeries<SensorData, String>(
-          enableTooltip: false,
-          color: Colors.blueAccent,
-          // markerSettings: MarkerSettings(isVisible: true),
-          dataSource: this.data,
-          xValueMapper: (SensorData sensorData, _) {
-            if (sensorData.createdDate.contains(' ')) {
-              return sensorData.createdDate.split(' ')[1];
-            } else {
-              return sensorData.createdDate;
-            }
-          },
-          yValueMapper: (SensorData sensorData, _) =>
-              double.parse(sensorData.value),
-        )
+            enableTooltip: false,
+            color: Colors.blueAccent,
+            // markerSettings: MarkerSettings(isVisible: true),
+            dataSource: this.data,
+            xValueMapper: (SensorData sensorData, _) {
+              if (sensorData.createdDate.contains(' ')) {
+                return sensorData.createdDate.split(' ')[1];
+              } else {
+                return sensorData.createdDate;
+              }
+            },
+            yValueMapper: (SensorData sensorData, _) {
+              return double.parse(sensorData.value);
+            })
       ],
     );
   }

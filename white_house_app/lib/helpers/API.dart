@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:white_house_app/models/ApiResponse.dart';
 
-const baseUrl = "http://192.168.1.109:8080";
+const baseUrl = "http://192.168.1.27:8080";
 
 class API {
   static Future<ApiResponse> getDevices() async {
@@ -18,7 +18,8 @@ class API {
   }
 
   static Future<ApiResponse> getLastSensorData({deviceID, sensorID}) async {
-    var url = baseUrl + "/getLastSensorData?DeviceID=$deviceID&SensorID=$sensorID";
+    var url =
+        baseUrl + "/getLastSensorData?DeviceID=$deviceID&SensorID=$sensorID";
     final res = await http.get(url);
     final response = json.decode(res.body);
     return ApiResponse(
@@ -28,9 +29,9 @@ class API {
     );
   }
 
-  static Future<ApiResponse> getSensorSummary({deviceID, sensorID}) async {
+  static Future<ApiResponse> getLast10SensorData({deviceID, sensorID}) async {
     var url =
-        baseUrl + "/getSensorDataSummary?DeviceID=$deviceID&SensorID=$sensorID";
+        baseUrl + "/getLast10SensorData?DeviceID=$deviceID&SensorID=$sensorID";
     var res = await http.get(url);
     final response = json.decode(res.body);
     return ApiResponse(

@@ -1,15 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:snapping_sheet/snapping_sheet.dart';
-import 'package:white_house_app/helpers/MyTextStyles.dart';
+import 'package:weather_icons/weather_icons.dart';
+import 'package:white_house_app/helpers/Calculators.dart';
 import 'package:white_house_app/models/SensorData.dart';
-import 'package:white_house_app/providers/SensorSummaryProvider.dart';
-import 'package:white_house_app/widgets/ChartItem.dart';
+import 'package:white_house_app/providers/SensorDataProvider.dart';
+import 'package:white_house_app/styles/MyColors.dart';
+import 'package:white_house_app/styles/MyDecorations.dart';
+import 'package:white_house_app/styles/MyTextStyles.dart';
+import 'package:white_house_app/widgets/designWidgets/ColumnDivider.dart';
+import 'package:white_house_app/widgets/designWidgets/RowDivider.dart';
+import 'package:white_house_app/widgets/designWidgets/ValueTile.dart';
+
+import 'ChartScreen.dart';
 
 class SensorScreen extends StatefulWidget {
-  int deviceID;
-  int sensorID;
+  final int deviceID;
+  final int sensorID;
 
   SensorScreen({this.deviceID, this.sensorID});
 
@@ -21,272 +30,207 @@ class SensorScreen extends StatefulWidget {
 class _SensorScreen extends State {
   int deviceID;
   int sensorID;
+  IconData sensorIcon;
 
-  _SensorScreen({this.deviceID, this.sensorID});
+  _SensorScreen({this.deviceID, this.sensorID}) {
+    switch (this.sensorID) {
+      case 201:
+        sensorIcon = WeatherIcons.thermometer;
+        break;
+      case 202:
+        sensorIcon = WeatherIcons.humidity;
+        break;
+      case 203:
+        sensorIcon = WeatherIcons.smoke;
+        break;
+      default:
+        sensorIcon = WeatherIcons.na;
+    }
+  }
 
   @override
   initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     initDataProviders();
   }
 
   initDataProviders() async {
-    await Provider.of<SensorSummaryProvider>(context, listen: false)
+    await Provider.of<SensorDataProvider>(context, listen: false)
         .initTimer(deviceID: this.deviceID, sensorID: this.sensorID);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.bodyBackgroundColor,
       appBar: AppBar(
+        backgroundColor: AppColors.appBarBackgroundColor,
+        title: Text(
+          'Device Name',
+          style: AppTextStyles.appBarTitleTextStyle,
+        ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(
+            Icons.arrow_back,
+            color: AppColors.arrowBackIconColor,
+          ),
           onPressed: () {
-            SensorSummaryProvider.timer.cancel();
+            SensorDataProvider.timer.cancel();
             Navigator.pop(context);
           },
         ),
-        centerTitle: true,
-        title: Text('White House'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.show_chart,
+              color: SensorScreenColors.showChartIconColor,
+            ),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      fullscreenDialog: true,
+                      builder: (context) =>
+                          ChartScreen(deviceID: deviceID, sensorID: sensorID)));
+            },
+          ),
+        ],
       ),
       body: SafeArea(
-        child: Consumer<SensorSummaryProvider>(
-          builder: (ctx, sensorSummaryProvider, _) => SnappingSheet(
-            snapPositions: <SnapPosition>[
-              SnapPosition(positionPixel: 0),
-              SnapPosition(positionPixel: 350),
-            ],
-            snappingSheetController: SnappingSheetController(),
-            child: Container(
-              // color: Colors.red,
-              child: ChartItem(
-                deviceID: deviceID,
-                sensorID: sensorID,
-                name: sensorSummaryProvider.sensor.name,
-                lastValue: sensorSummaryProvider.lastValue,
-                unitSymbol: sensorSummaryProvider.sensor.unitSymbol,
-                data: sensorSummaryProvider.sensorData,
-              ),
-            ),
-            grabbing: Container(
-              padding: EdgeInsets.only(left: 25, right: 25),
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Icon(
-                      Icons.arrow_upward,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                    Text(
-                      'Load More',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
+        child: Consumer<SensorDataProvider>(
+          builder: (ctx, sensorDataProvider, _) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        DateFormat.yMMMMEEEEd().format(
+                          DateTime.now(),
+                        ), // Saturday, March 28, 2020
+                        style: SensorScreenTextStyles.currentDateTimeTextStyle,
                       ),
-                    ),
-                    Icon(
-                      Icons.arrow_upward,
-                      color: Colors.white,
-                      size: 30,
-                    )
-                  ],
-                ),
-              ),
-              color: Colors.green,
-            ),
-            sheetBelow: SingleChildScrollView(
-              child: Container(
-                color: Colors.white,
-                child: DataTable(
-                  headingRowHeight: 45,
-                  horizontalMargin: 10,
-                  rows: _convertDataToDataRow(sensorSummaryProvider.sensorData),
-                  columns: [
-                    DataColumn(
-                      label: Text(
-                        'Created Date',
-                        style: MyTextStyles.dataColumnTextStyle,
+                      Text(
+                        DateFormat.Hms().format(
+                          DateTime.now(),
+                        ), // 19:29:05
+                        style: SensorScreenTextStyles.currentDateTimeTextStyle,
                       ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Value',
-                        style: MyTextStyles.dataColumnTextStyle,
+                    ],
+                  ),
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        sensorDataProvider.sensor.name,
+                        style: SensorScreenTextStyles.sensorNameTextStyle,
                       ),
+                      Text(
+                        'Device Description',
+                        style:
+                            SensorScreenTextStyles.deviceDescriptionTextStyle,
+                      )
+                    ],
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: 280,
+                    height: 280,
+                    decoration: SensorScreenDecorations.circleBoxDecoration,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          sensorIcon,
+                          size: 70,
+                          color: SensorScreenColors.sensorIconColor,
+                        ),
+                        Text(
+                          '${sensorDataProvider.lastValue} ${sensorDataProvider.sensor.unitSymbol}',
+                          style: SensorScreenTextStyles.lastValueTextStyle,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  Column(
+                    children: <Widget>[
+                      ColumnDivider(),
+                      Text(
+                        'Last ${sensorDataProvider.sensorData.length} Values',
+                        style:
+                            SensorScreenTextStyles.recentValuesTitleTextStyle,
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(left: 15, right: 15, top: 15),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: _buildLast10DataToWidgetList(
+                                sensorDataProvider.sensorData,
+                                sensorDataProvider.sensor.unitSymbol),
+                          ),
+                        ),
+                      ),
+                      ColumnDivider(),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 60),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        ValueTile(
+                            label: "min",
+                            value:
+                                '${Calculators.getMinValue(sensorDataProvider.sensorData)} ${sensorDataProvider.sensor.unitSymbol}'),
+                        RowDivider(),
+                        ValueTile(
+                            label: "avg",
+                            value:
+                                '${Calculators.getAverageValue(sensorDataProvider.sensorData)} ${sensorDataProvider.sensor.unitSymbol}'),
+                        RowDivider(),
+                        ValueTile(
+                            label: "max",
+                            value:
+                                '${Calculators.getMaxValue(sensorDataProvider.sensorData)} ${sensorDataProvider.sensor.unitSymbol}'),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ),
+            );
+          },
         ),
-
-        // SingleChildScrollView(
-        //   child: Column(
-        //     children: <Widget>[
-        //       InkWell(
-        //         child: ChartItem(
-        //           deviceID: deviceID,
-        //           sensorID: sensorID,
-        //           name: sensorSummaryProvider.sensor.name,
-        //           lastValue: sensorSummaryProvider.lastValue,
-        //           unitSymbol: sensorSummaryProvider.sensor.unitSymbol,
-        //           data: sensorSummaryProvider.sensorData,
-        //         ),
-        //       ),
-        //       DataTable(
-        //         headingRowHeight: 45,
-        //         horizontalMargin: 10,
-        //         rows: _convertDataToDataRow(sensorSummaryProvider.sensorData),
-        //         columns: [
-        //           DataColumn(
-        //             label: Text(
-        //               'Created Date',
-        //               style: MyTextStyles.dataColumnTextStyle,
-        //             ),
-        //           ),
-        //           DataColumn(
-        //             label: Text(
-        //               'Value',
-        //               style: MyTextStyles.dataColumnTextStyle,
-        //             ),
-        //           ),
-        //         ],
-        //       ),
-        //     ],
-        //   ),
-        // ),
-
-        // CustomScrollView(
-        //   slivers: <Widget>[
-        //     // SliverAppBar(
-        //     //   leading: SizedBox(),
-        //     //   forceElevated: true,
-        //     //   snap: true,
-        //     //   floating: true,
-        //     //   flexibleSpace: ChartItem(
-        //     //     deviceID: deviceID,
-        //     //     sensorID: sensorID,
-        //     //     name: sensorSummaryProvider.sensor.name,
-        //     //     lastValue: sensorSummaryProvider.lastValue,
-        //     //     unitSymbol: sensorSummaryProvider.sensor.unitSymbol,
-        //     //     data: sensorSummaryProvider.sensorData,
-        //     //   ),
-        //     //   expandedHeight: 360,
-        //     // ),
-        //     // SliverList(
-        //     //   delegate: SliverChildListDelegate(
-        //     //     [
-        //     //       Padding(
-        //     //         padding: const EdgeInsets.all(8.0),
-        //     //         child: DataTable(
-        //     //           headingRowHeight: 45,
-        //     //           horizontalMargin: 10,
-        //     //           rows: _convertDataToDataRow(
-        //     //               sensorSummaryProvider.sensorData),
-        //     //           columns: [
-        //     //             DataColumn(
-        //     //               label: Text(
-        //     //                 'Created Date',
-        //     //                 style: MyTextStyles.dataColumnTextStyle,
-        //     //               ),
-        //     //             ),
-        //     //             DataColumn(
-        //     //               label: Text(
-        //     //                 'Value',
-        //     //                 style: MyTextStyles.dataColumnTextStyle,
-        //     //               ),
-        //     //             ),
-        //     //           ],
-        //     //         ),
-        //     //       ),
-        //     //     ],
-        //     //   ),
-        //     // ),
-        //   ],
-        // ),
       ),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.menu),
+          onPressed: () {
+            // TO-DO: Set Maximum - Minimum Limit
+          }),
     );
   }
 
-  List<DataRow> _convertDataToDataRow(List<SensorData> list) {
-    return list.reversed
-        .toList()
-        .map(
-          (data) => DataRow(
-            cells: [
-              DataCell(
-                Text(data.createdDate),
-              ),
-              DataCell(
-                Text(data.value),
-              ),
-            ],
-          ),
-        )
-        .toList();
+  List<Widget> _buildLast10DataToWidgetList(
+      List<SensorData> dataList, String unitSymbol) {
+    List<Widget> widgetList = [];
+    for (var data in dataList) {
+      widgetList.add(
+        Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 12, right: 12),
+              child: ValueTile(
+                  label: data.createdDate.split(' ')[1],
+                  value: '${data.value} $unitSymbol'),
+            ),
+          ],
+        ),
+      );
+    }
+    return widgetList;
   }
 }
-
-// @override
-// Widget build(BuildContext context) {
-//   return Scaffold(
-//     backgroundColor: Colors.grey[350],
-//     appBar: AppBar(
-//       leading: IconButton(
-//         icon: Icon(Icons.arrow_back),
-//         onPressed: () {
-//           SensorSummaryProvider.timer.cancel();
-//           Navigator.pop(context);
-//         },
-//       ),
-//       centerTitle: true,
-//       title: Text('White House'),
-//     ),
-//     body: Container(
-//       child: Consumer<SensorSummaryProvider>(
-//         builder: (ctx, sensorSummaryProvider, _) => Column(
-//           children: <Widget>[
-//             ChartItem(
-//               name: sensorSummaryProvider.sensor.name,
-//               lastValue: sensorSummaryProvider
-//                   .sensorData[sensorSummaryProvider.sensorData.length - 1]
-//                   .value,
-//               unitSymbol: sensorSummaryProvider.sensor.unitSymbol,
-//               data: sensorSummaryProvider.sensorData,
-//             ),
-//             Expanded(
-//               child: SingleChildScrollView(
-//                 scrollDirection: Axis.vertical,
-//                 child: DataTable(
-//                   headingRowHeight: 45,
-//                   horizontalMargin: 10,
-//                   rows:
-//                       _convertDataToDataRow(sensorSummaryProvider.sensorData),
-//                   columns: [
-//                     DataColumn(
-//                       label: Text(
-//                         'Created Date',
-//                         style: TextStyle(
-//                             fontSize: 15, fontWeight: FontWeight.bold),
-//                       ),
-//                     ),
-//                     DataColumn(
-//                       label: Text(
-//                         'Value',
-//                         style: TextStyle(
-//                             fontSize: 15, fontWeight: FontWeight.bold),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     ),
-//   );
-// }

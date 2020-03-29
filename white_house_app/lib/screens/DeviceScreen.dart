@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:white_house_app/providers/DeviceProvider.dart';
-import 'package:white_house_app/widgets/DeviceList.dart';
+import 'package:white_house_app/providers/OverviewProvider.dart';
+import 'package:white_house_app/styles/MyColors.dart';
+import 'package:white_house_app/widgets/DeviceDetailItem.dart';
+import 'package:white_house_app/widgets/SensorItemList.dart';
+import 'package:white_house_app/widgets/designWidgets/ItemCard.dart';
 
 class DeviceScreen extends StatefulWidget {
   @override
@@ -14,31 +18,57 @@ class _DeviceScreen extends State {
   initState() {
     super.initState();
     initDataProviders();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
   }
 
   initDataProviders() async {
-    await Provider.of<DeviceSummaryProvider>(context, listen: false)
-        .initTimer();
+    await Provider.of<OverviewProvider>(context, listen: false).initTimer();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[350],
+      backgroundColor: AppColors.bodyBackgroundColor,
       appBar: AppBar(
-        centerTitle: true,
+        backgroundColor: AppColors.appBarBackgroundColor,
         title: Text('White House'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              // TO-DO: Add New Device
+            },
+          ),
+        ],
       ),
-      body: Consumer<DeviceSummaryProvider>(
-        builder: (ctx, deviceSummaryProvider, _) {
-          if (deviceSummaryProvider.deviceList != null) {
-            if (deviceSummaryProvider.deviceList.length > 0) {
-              return DeviceList(
-                deviceList: deviceSummaryProvider.deviceList,
-              );
-            } else {
-              return Text("No Data");
-            }
+      body: Consumer<OverviewProvider>(
+        builder: (ctx, overviewProvider, _) {
+          if (overviewProvider.overviewList.isNotEmpty) {
+            return SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: overviewProvider.overviewList
+                    .map<Widget>(
+                      (overview) => ItemCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            DeviceDetailItem(
+                              overview: overview,
+                            ),
+                            SensorItemList(
+                              deviceID: overview.device.deviceID,
+                              sensorList: overview.sensorDataList,
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            );
           } else {
             return Text("No Data");
           }

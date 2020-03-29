@@ -27,8 +27,11 @@ dependencies:
   flutter_svg: 0.17.1 
   provider: ^4.0.2
   http: ^0.12.0+4
+  google_fonts: ^0.3.10
   syncfusion_flutter_charts: ^17.4.51
-  snapping_sheet: 1.1.2
+  # snapping_sheet: 1.1.2
+  weather_icons: ^2.0.1
+  intl: ^0.16.1
 
 
 dev_dependencies:
