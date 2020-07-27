@@ -14,6 +14,10 @@ abstract class DeviceScreenColors {
   static const Color deviceNameColor = Color(0xFF000000); //  Colors.black;
   static const Color deviceDescriptionColor =
       Color(0xFF9E9E9E); //  Colors.grey;
+  static const Color acOnlineColor = Color(0xFF000000); //  Colors.black;
+  static const Color acOfflineColor = Color(0xFF9E9E9E); //  Colors.grey;
+  static const Color wsOnlineColor = Color(0xFF03A9F4); // Colors.lightBlue
+  static const Color wsOfflineColor = Color(0xFF9E9E9E); //  Colors.grey;
 }
 
 abstract class SensorScreenColors {

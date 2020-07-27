@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'White House',
+        title: 'Green House',
         theme: ThemeData(
           textTheme: GoogleFonts.montserratAlternatesTextTheme(),
         ),

@@ -2,10 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const PORT = 8080;
 const app = express();
-
 const sqlite3 = require('better-sqlite3');
 const DATABASE_PATH = '../Database/WhiteHouse.db';
-
 var ip = require("ip");
 const IPADDRESS = ip.address()
 
@@ -14,6 +12,64 @@ app.use(bodyParser.json());
 
 app.listen(PORT, () => {
     console.log(`Server running at: http://${IPADDRESS}:${PORT}/`);
+});
+
+app.post("/insertSensorData", (req, res) => {
+
+    var data = [req.body.DeviceID, req.body.SensorID, req.body.Value];
+
+    var responseDB = insertSensorDataToDatabase(
+        `INSERT INTO SensorDatas (DeviceID, SensorID, Value) VALUES ( ?,?,? )`
+        , data
+    );
+
+    var response = {};
+
+    if (responseDB.changes == 1) {
+        response.type = 'S';
+        response.message = 'Successfully Inserted';
+    }
+
+    else {
+        response.type = 'E';
+        response.message = 'Error';
+    }
+
+    res.send(response);
+});
+
+app.patch("/changeStatus", (req, res) => {
+    var columnName = req.body.ColumnName;
+    var value = req.body.Value;
+    var deviceID = req.body.DeviceID;
+
+    var responseDB = modifyDevice(`UPDATE Devices SET ${columnName} = ${value} WHERE DeviceID = ? AND ${columnName} IS NOT ${value}`, deviceID);
+
+    var response = {};
+    var messageWord1 = columnNameExpansion(columnName);
+    var messageWord2;
+
+    if (value == 1) { messageWord2 = "turned on." }
+    else if (value == 0) { messageWord2 = "turned off." }
+    else messageWord2 = "N/a";
+
+    if (responseDB.changes == 1) {
+        response.type = 'S';
+        response.message = messageWord1 + ' is successfully ' + messageWord2;
+    }
+
+    else if (responseDB.changes == 0) {
+        response.type = "N/a"
+        response.message = messageWord1 + " is already " + messageWord2 + " No action.";
+    }
+
+    else {
+        response.type = 'E';
+        response.message = "Error";
+    }
+
+    res.send(response);
+
 });
 
 app.get("/getDevices", (req, res) => {
@@ -60,13 +116,10 @@ app.get("/getLast10SensorData", (req, res) => {
         var dateA = new Date(a.CreatedDate);
         var dateB = new Date(b.CreatedDate);
 
-        if (dateA < dateB) {
-            return -1;
-        }
-        if (dateA > dateB) {
-            return 1;
-        }
-        return 0;
+        if (dateA < dateB) return -1;
+        else if (dateA > dateB) return 1;
+        else return 0;
+
     });
 
     sensorData.forEach((sensorItem) => {
@@ -151,8 +204,9 @@ app.get("/getYearlySensorData", (req, res) => {
 
     var sensor = getDataFromDatabase(`SELECT * FROM Sensors WHERE SensorID = ${req.query.SensorID};`)[0];
 
-    var yearlySensorData = getDataFromDatabase(`SELECT * from YearlySensorData WHERE DeviceID = ${req.query.DeviceID} AND ` +
-        `SensorID = ${req.query.SensorID};`);
+    var yearlySensorData = getDataFromDatabase(
+        `SELECT * from YearlySensorData WHERE DeviceID = ${req.query.DeviceID} AND ` + `SensorID = ${req.query.SensorID};`
+    );
 
     yearlySensorData.forEach((item) => {
         // item.CreatedDate = formatDate(item.CreatedDate);
@@ -169,32 +223,16 @@ app.get("/getYearlySensorData", (req, res) => {
     });
 });
 
-app.post("/insertSensorData", (req, res) => {
 
-    var data = [req.body.DeviceID, req.body.SensorID, req.body.Value];
-
-    var responseDB = insertSensorDataToDatabase(`
-    INSERT INTO SensorDatas (
-         DeviceID, 
-         SensorID, 
-         Value)
-    VALUES ( ?,?,? )`, data);
-
-    var response = {};
-
-    if (responseDB.changes == 1) {
-        response.type = 'S';
-        response.message = 'Successfully Inserted';
-    } else {
-        response.type = 'E';
-        response.message = 'Error';
-    }
-
-    res.send(response);
-
-});
 
 function insertSensorDataToDatabase(query, data) {
+    var database = new sqlite3(DATABASE_PATH);
+    var response = database.prepare(query).run(data);
+    database.close();
+    return response;
+}
+
+function modifyDevice(query, data) {
     var database = new sqlite3(DATABASE_PATH);
     var response = database.prepare(query).run(data);
     database.close();
@@ -206,6 +244,18 @@ function getDataFromDatabase(query) {
     var response = database.prepare(query).all();
     database.close();
     return response;
+}
+
+function columnNameExpansion(columnName) {
+
+    var messageWord;
+
+    if (columnName == "IsOnline") messageWord = "Device";
+    else if (columnName == "ACOnline") messageWord = "Air Conditioner Unit";
+    else if (columnName == "WSOnline") messageWord = "Watering System";
+    else messageWord = "N/a";
+
+    return messageWord;
 }
 
 function formatDate(dateTime) {

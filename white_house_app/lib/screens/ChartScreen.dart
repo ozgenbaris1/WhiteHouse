@@ -5,15 +5,19 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:white_house_app/models/DataFilter.dart';
 import 'package:white_house_app/providers/SensorDataProvider.dart';
+import 'package:white_house_app/styles/MyColors.dart';
+import 'package:white_house_app/styles/MyTextStyles.dart';
 import 'package:white_house_app/widgets/Chart.dart';
 
 class ChartScreen extends StatefulWidget {
   final int deviceID;
   final int sensorID;
+  final String sensorName;
 
   ChartScreen({
     @required this.deviceID,
     @required this.sensorID,
+    @required this.sensorName,
   });
 
   @override
@@ -56,16 +60,20 @@ class _ChartScreenState extends State<ChartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.bodyBackgroundColor,
       body: Consumer<SensorDataProvider>(
         builder: (ctx, sensorSummaryProvider, _) {
-          return SafeArea(
-            left: false,
-            child: Row(
-              children: <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          return Column(
+            children: <Widget>[
+              Container(
+                color: AppColors.appBarBackgroundColor,
+                height: 40,
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     IconButton(
+                      color: AppColors.appBarTitleColor,
                       icon: Icon(Icons.arrow_back),
                       onPressed: () {
                         SystemChrome.setPreferredOrientations(
@@ -74,55 +82,66 @@ class _ChartScreenState extends State<ChartScreen> {
                         Navigator.pop(context);
                       },
                     ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: buttonList.map<Widget>(
-                          (item) {
-                            return filterButton(
-                              title: item.title,
-                              isBold: item.isBold,
-                              onPressed: () {
-                                SensorDataProvider.timer.cancel();
-                                Provider.of<SensorDataProvider>(context,
-                                        listen: false)
-                                    .initTimer(
-                                        dataFilter: item.filter,
-                                        deviceID: widget.deviceID,
-                                        sensorID: widget.sensorID);
-
-                                var tmpList = buttonList;
-
-                                tmpList.forEach((tmp) {
-                                  if (item.title == tmp.title) {
-                                    tmp.isBold = true;
-                                  } else {
-                                    tmp.isBold = false;
-                                  }
-                                });
-
-                                setState(() {
-                                  buttonList = tmpList;
-                                });
-                              },
-                            );
-                          },
-                        ).toList(),
-                      ),
+                    Text(
+                      widget.sensorName,
+                      style: AppTextStyles.appBarTitleTextStyle,
                     ),
                   ],
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 12.0),
-                    child: Chart(
-                      data: sensorSummaryProvider.sensorData,
-                      unitSymbol: sensorSummaryProvider.sensor.unitSymbol,
-                    ),
+              ),
+              Expanded(
+                child: SafeArea(
+                  left: false,
+                  bottom: false,
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        color: Colors.green,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: buttonList.map<Widget>(
+                            (item) {
+                              return filterButton(
+                                title: item.title,
+                                isBold: item.isBold,
+                                onPressed: () {
+                                  SensorDataProvider.timer.cancel();
+                                  Provider.of<SensorDataProvider>(context,
+                                          listen: false)
+                                      .initTimer(
+                                          dataFilter: item.filter,
+                                          deviceID: widget.deviceID,
+                                          sensorID: widget.sensorID);
+
+                                  var tmpList = buttonList;
+
+                                  tmpList.forEach((tmp) {
+                                    if (item.title == tmp.title)
+                                      tmp.isBold = true;
+                                    else
+                                      tmp.isBold = false;
+                                  });
+
+                                  setState(() {
+                                    buttonList = tmpList;
+                                  });
+                                },
+                              );
+                            },
+                          ).toList(),
+                        ),
+                      ),
+                      Expanded(
+                        child: Chart(
+                          data: sensorSummaryProvider.sensorData,
+                          unitSymbol: sensorSummaryProvider.sensor.unitSymbol,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           );
         },
       ),
@@ -141,15 +160,16 @@ class _ChartScreenState extends State<ChartScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 3),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 1, vertical: 5),
+        padding: EdgeInsets.symmetric(horizontal: 1),
         // decoration: MyDecorations.rawMaterialButtonDecoration,
         child: RawMaterialButton(
+          padding: EdgeInsets.all(0),
           constraints: BoxConstraints(),
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           onPressed: onPressed,
           child: Text(
             title,
-            style: TextStyle(fontWeight: fw, fontSize: 13),
+            style: TextStyle(fontWeight: fw, fontSize: 13, color: Colors.white),
           ),
         ),
       ),

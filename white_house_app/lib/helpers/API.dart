@@ -2,10 +2,51 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:white_house_app/models/ApiResponse.dart';
+import 'package:white_house_app/models/SystemType.dart';
 
-const baseUrl = "http://192.168.1.27:8080";
+const baseUrl = "http://192.168.1.26:8080";
 
 class API {
+  static Future<ApiResponse> changeStatus(
+      {int deviceID, SystemType systemType, bool setStatus}) async {
+    var url = baseUrl + "/changeStatus";
+    String columnName;
+
+    switch (systemType) {
+      case SystemType.device:
+        columnName = "IsOnline";
+        break;
+      case SystemType.airCondition:
+        columnName = "ACOnline";
+        break;
+      case SystemType.wateringSystem:
+        columnName = "WSOnline";
+        break;
+      default:
+        columnName = "";
+        break;
+    }
+
+    Map<String, String> headers = {"Content-type": "application/json"};
+
+    int value = setStatus ? 1 : 0;
+
+    String body =
+        '{"DeviceID": $deviceID, "ColumnName": "$columnName", "Value": $value}';
+
+    // String body =
+    //     '{"DeviceID": ${deviceID.toString()}, "ColumnName": ${columnName.toString()}, "Value": ${value.toString()}}';
+
+    http.Response res = await http.patch(url, headers: headers, body: body);
+
+    final response = json.decode(res.body);
+
+    return ApiResponse(
+      type: response['type'],
+      message: response['message'],
+    );
+  }
+
   static Future<ApiResponse> getDevices() async {
     var url = baseUrl + "/getDevices";
     final res = await http.get(url);

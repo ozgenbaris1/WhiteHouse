@@ -33,7 +33,7 @@ class _DeviceScreen extends State {
       backgroundColor: AppColors.bodyBackgroundColor,
       appBar: AppBar(
         backgroundColor: AppColors.appBarBackgroundColor,
-        title: Text('White House'),
+        title: Text('Greenhouse'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
@@ -59,8 +59,7 @@ class _DeviceScreen extends State {
                               overview: overview,
                             ),
                             SensorItemList(
-                              deviceID: overview.device.deviceID,
-                              sensorList: overview.sensorDataList,
+                              overview: overview,
                             ),
                           ],
                         ),

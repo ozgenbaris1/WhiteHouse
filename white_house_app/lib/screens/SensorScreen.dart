@@ -18,21 +18,31 @@ import 'ChartScreen.dart';
 
 class SensorScreen extends StatefulWidget {
   final int deviceID;
+  final String deviceName;
+  final String deviceDescription;
   final int sensorID;
 
-  SensorScreen({this.deviceID, this.sensorID});
+  SensorScreen(
+      {this.deviceID, this.sensorID, this.deviceName, this.deviceDescription});
 
   @override
-  _SensorScreen createState() =>
-      _SensorScreen(deviceID: deviceID, sensorID: sensorID);
+  _SensorScreen createState() => _SensorScreen(
+        deviceID: deviceID,
+        sensorID: sensorID,
+        deviceName: deviceName,
+        deviceDescription: deviceDescription,
+      );
 }
 
 class _SensorScreen extends State {
   int deviceID;
   int sensorID;
+  String deviceName;
+  String deviceDescription;
   IconData sensorIcon;
 
-  _SensorScreen({this.deviceID, this.sensorID}) {
+  _SensorScreen(
+      {this.deviceID, this.sensorID, this.deviceName, this.deviceDescription}) {
     switch (this.sensorID) {
       case 201:
         sensorIcon = WeatherIcons.thermometer;
@@ -67,7 +77,7 @@ class _SensorScreen extends State {
       appBar: AppBar(
         backgroundColor: AppColors.appBarBackgroundColor,
         title: Text(
-          'Device Name',
+          deviceName,
           style: AppTextStyles.appBarTitleTextStyle,
         ),
         leading: IconButton(
@@ -88,11 +98,16 @@ class _SensorScreen extends State {
             ),
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      fullscreenDialog: true,
-                      builder: (context) =>
-                          ChartScreen(deviceID: deviceID, sensorID: sensorID)));
+                context,
+                MaterialPageRoute(
+                  fullscreenDialog: true,
+                  builder: (context) => ChartScreen(
+                    deviceID: deviceID,
+                    sensorID: sensorID,
+                    sensorName: 'Temperature',
+                  ),
+                ),
+              );
             },
           ),
         ],
@@ -100,12 +115,13 @@ class _SensorScreen extends State {
       body: SafeArea(
         child: Consumer<SensorDataProvider>(
           builder: (ctx, sensorDataProvider, _) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 15),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Column(
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                  // Time
+                  // padding: EdgeInsets.only(top: 15),
+                  child: Column(
                     children: <Widget>[
                       Text(
                         DateFormat.yMMMMEEEEd().format(
@@ -121,41 +137,45 @@ class _SensorScreen extends State {
                       ),
                     ],
                   ),
-                  Column(
+                ),
+                Container(
+                  child: Column(
                     children: <Widget>[
                       Text(
                         sensorDataProvider.sensor.name,
                         style: SensorScreenTextStyles.sensorNameTextStyle,
                       ),
                       Text(
-                        'Device Description',
+                        deviceDescription,
                         style:
                             SensorScreenTextStyles.deviceDescriptionTextStyle,
                       )
                     ],
                   ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: 280,
-                    height: 280,
-                    decoration: SensorScreenDecorations.circleBoxDecoration,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          sensorIcon,
-                          size: 70,
-                          color: SensorScreenColors.sensorIconColor,
-                        ),
-                        Text(
-                          '${sensorDataProvider.lastValue} ${sensorDataProvider.sensor.unitSymbol}',
-                          style: SensorScreenTextStyles.lastValueTextStyle,
-                        ),
-                      ],
-                    ),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  width: 280,
+                  height: 280,
+                  decoration: SensorScreenDecorations.circleBoxDecoration,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        sensorIcon,
+                        size: 70,
+                        color: SensorScreenColors.sensorIconColor,
+                      ),
+                      Text(
+                        '${sensorDataProvider.lastValue} ${sensorDataProvider.sensor.unitSymbol}',
+                        style: SensorScreenTextStyles.lastValueTextStyle,
+                      ),
+                    ],
                   ),
-                  Column(
+                ),
+                Container(
+                  child: Column(
                     children: <Widget>[
                       ColumnDivider(),
                       Text(
@@ -178,39 +198,33 @@ class _SensorScreen extends State {
                       ColumnDivider(),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 60),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        ValueTile(
-                            label: "min",
-                            value:
-                                '${Calculators.getMinValue(sensorDataProvider.sensorData)} ${sensorDataProvider.sensor.unitSymbol}'),
-                        RowDivider(),
-                        ValueTile(
-                            label: "avg",
-                            value:
-                                '${Calculators.getAverageValue(sensorDataProvider.sensorData)} ${sensorDataProvider.sensor.unitSymbol}'),
-                        RowDivider(),
-                        ValueTile(
-                            label: "max",
-                            value:
-                                '${Calculators.getMaxValue(sensorDataProvider.sensorData)} ${sensorDataProvider.sensor.unitSymbol}'),
-                      ],
-                    ),
+                ),
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      ValueTile(
+                          label: "min",
+                          value:
+                              '${Calculators.getMinValue(sensorDataProvider.sensorData)} ${sensorDataProvider.sensor.unitSymbol}'),
+                      RowDivider(),
+                      ValueTile(
+                          label: "avg",
+                          value:
+                              '${Calculators.getAverageValue(sensorDataProvider.sensorData)} ${sensorDataProvider.sensor.unitSymbol}'),
+                      RowDivider(),
+                      ValueTile(
+                          label: "max",
+                          value:
+                              '${Calculators.getMaxValue(sensorDataProvider.sensorData)} ${sensorDataProvider.sensor.unitSymbol}'),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             );
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.menu),
-          onPressed: () {
-            // TO-DO: Set Maximum - Minimum Limit
-          }),
     );
   }
 

@@ -6,9 +6,10 @@ import 'package:white_house_app/styles/MyDecorations.dart';
 
 class SensorItem extends StatelessWidget {
   final int deviceID;
+  final String deviceName;
   final SensorData sensorData;
 
-  SensorItem({this.deviceID, this.sensorData});
+  SensorItem({this.deviceID, this.deviceName, this.sensorData});
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +17,13 @@ class SensorItem extends StatelessWidget {
       padding: EdgeInsets.all(0),
       onPressed: () {
         OverviewProvider.timer.cancel();
-
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => SensorScreen(
               deviceID: deviceID,
               sensorID: sensorData.sensorID,
+              deviceName: deviceName,
             ),
             fullscreenDialog: true,
           ),

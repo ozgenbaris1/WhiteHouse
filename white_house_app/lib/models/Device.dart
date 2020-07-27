@@ -3,12 +3,22 @@ class Device {
   String name;
   String description;
   bool isOnline;
+  bool acOnline;
+  bool wsOnline;
 
-  Device({this.deviceID, this.name, this.description, isOnline}) {
-    if (isOnline == 1) {
-      this.isOnline = true;
-    } else {
-      this.isOnline = false;
-    }
+  Device(
+      {this.deviceID,
+      this.name,
+      this.description,
+      isOnline,
+      acOnline,
+      wsOnline}) {
+    this.isOnline = convertIntToBool(isOnline);
+    this.acOnline = convertIntToBool(acOnline);
+    this.wsOnline = convertIntToBool(wsOnline);
+  }
+
+  convertIntToBool(int value) {
+    return value == 1 ? true : false;
   }
 }

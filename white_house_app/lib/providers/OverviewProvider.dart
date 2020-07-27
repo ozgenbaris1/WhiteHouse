@@ -26,11 +26,12 @@ class OverviewProvider extends ChangeNotifier {
         var sensorDataList = item['SensorDataList'];
 
         Device device = new Device(
-          deviceID: item['Device']['DeviceID'],
-          name: item['Device']['Name'],
-          description: item['Device']['Description'],
-          isOnline: item['Device']['IsOnline'],
-        );
+            deviceID: item['Device']['DeviceID'],
+            name: item['Device']['Name'],
+            description: item['Device']['Description'],
+            isOnline: item['Device']['IsOnline'],
+            acOnline: item['Device']['ACOnline'],
+            wsOnline: item['Device']['WSOnline']);
 
         List<SensorData> data = sensorDataList
             .map<SensorData>(

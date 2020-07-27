@@ -29,7 +29,7 @@ class Chart extends StatelessWidget {
       series: <LineSeries<SensorData, String>>[
         LineSeries<SensorData, String>(
             enableTooltip: false,
-            color: Colors.blueAccent,
+            color: Colors.green,
             // markerSettings: MarkerSettings(isVisible: true),
             dataSource: this.data,
             xValueMapper: (SensorData sensorData, _) {
