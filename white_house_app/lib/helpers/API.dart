@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:white_house_app/models/ApiResponse.dart';
 import 'package:white_house_app/models/SystemType.dart';
 
-const baseUrl = "http://192.168.1.26:8080";
+const baseUrl = "http://192.168.4.1:8080";
 
 class API {
   static Future<ApiResponse> changeStatus(
